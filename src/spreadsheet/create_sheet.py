@@ -57,12 +57,9 @@ class Spreadsheet():
                     mech_num = col.split('#')[1]
                     mech_num = mech_num.split(' ')[0]
                     for m in self.mech_list:
-                        print(type(m[0]))
                         if mech_num == str(m[0]):
-                            print('printing m')
-                            print(self.m[0])
-                            # print(self.m[1])
-                            print('printing mech')
-                            print(self.mech_num)
-
+                            col_gas = col.split('_')[0] + '_' + col.split('_')[1] + '_'
+                            new_col = col_gas + str(m[1])
+                            df = df.rename({col: new_col}, axis = 'columns')
+            print(df.columns.values)
 
