@@ -134,3 +134,4 @@ dmypy.json
 #Other project related
 src/mechanisms/*
 src/data/*
+src/output/*

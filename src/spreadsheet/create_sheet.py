@@ -11,6 +11,7 @@ class Spreadsheet():
 
         #convert spreadsheet column names:
         self.rename_col()
+        self.print_excel()
 
     def create_pd(self, name_of_sensitivity_folder):
         """
@@ -63,3 +64,6 @@ class Spreadsheet():
                             df = df.rename({col: new_col}, axis = 'columns')
             print(df.columns.values)
 
+    def print_excel(self):
+        for df in self.df_list:
+            pd.df.to_excel()
