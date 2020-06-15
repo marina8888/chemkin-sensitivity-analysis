@@ -2,15 +2,16 @@ import pandas as pd
 import os
 import openpyxl
 
+
 class Spreadsheet():
     def __init__(self, name_of_sensitivity_folder: str, name_of_mech_file):
-        #format mech and spreadsheets to pandas:
+        # format mech and spreadsheets to pandas:
         self.df_list = self.create_pd(name_of_sensitivity_folder)
         self.create_cols()
         self.convert_cm3_to_m3()
         self.mech_list = self.create_mech(name_of_mech_file)
 
-        #convert spreadsheet column names:
+        # convert spreadsheet column names:
         self.rename_col()
         self.print_excel()
 
@@ -31,7 +32,7 @@ class Spreadsheet():
 
     def create_mech(self, mech_file):
         """
-        create a list of numbered
+        create a list of numbered equations from the mech file. Will be incorrect if chemkin does not read the same way.
         """
         lines = []
         stripped_l = []
@@ -45,16 +46,18 @@ class Spreadsheet():
             stripped_l.append(ele_l)
         return stripped_l
 
-
     def create_cols(self):
         for df in self.df_list:
             df['dI'] = None
 
     def convert_cm3_to_m3(self):
         for df in self.df_list:
-            df.iloc[:, 2:] = df.iloc[:, 2:] .apply(lambda x: x * 1000000)
+            df.iloc[:, 2:] = df.iloc[:, 2:].apply(lambda x: x * 1000000)
 
     def rename_col(self):
+        """
+        include the script to rename the columns into a new format by matching eq number from mech with the number in the column.
+        """
         for df in self.df_list:
             for col in df.columns.values:
                 if 'GasRxn#' in col:
@@ -63,9 +66,9 @@ class Spreadsheet():
                     for m in self.mech_list:
                         if mech_num == str(m[0]):
                             col_gas = col.split('_')[0] + '_' + col.split('_')[1] + '_'
-                            new_col = col_gas + str(m[1])  + '_(mole/m3-sec)'
-                            df.rename(columns={col: new_col}, inplace = True)
+                            new_col = col_gas + str(m[1]) + '_(mole/m3-sec)'
+                            df.rename(columns={col: new_col}, inplace=True)
 
     def print_excel(self):
         for df, f in zip(self.df_list, self.file_list):
-            df.to_excel('./output/' + f + '.xlsx',sheet_name='all_ROP')
+            df.to_excel('./output/' + f + '.xlsx', sheet_name='all_ROP')
