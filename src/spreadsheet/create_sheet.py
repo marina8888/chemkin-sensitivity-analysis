@@ -63,7 +63,7 @@ class Spreadsheet():
                     for m in self.mech_list:
                         if mech_num == str(m[0]):
                             col_gas = col.split('_')[0] + '_' + col.split('_')[1] + '_'
-                            new_col = col_gas + str(m[1])
+                            new_col = col_gas + str(m[1])  + '_(mole/m3-sec)'
                             df.rename(columns={col: new_col}, inplace = True)
 
     def print_excel(self):
