@@ -1,5 +1,6 @@
 import pandas as pd
 import os
+import openpyxl
 
 class Spreadsheet():
     def __init__(self, name_of_sensitivity_folder: str, name_of_mech_file):
@@ -18,9 +19,11 @@ class Spreadsheet():
         create list of dataframes from csv files
         """
         df_list = []
+        self.file_list = []
         path = os.path.join('data', name_of_sensitivity_folder)
         for file in os.listdir(path):
             if file.endswith(".csv"):
+                self.file_list.append(file)
                 full_path = os.path.join(path, file)
                 sens_df = pd.read_csv(full_path)
                 df_list.append(sens_df)
@@ -61,9 +64,8 @@ class Spreadsheet():
                         if mech_num == str(m[0]):
                             col_gas = col.split('_')[0] + '_' + col.split('_')[1] + '_'
                             new_col = col_gas + str(m[1])
-                            df = df.rename({col: new_col}, axis = 'columns')
-            print(df.columns.values)
+                            df.rename(columns={col: new_col}, inplace = True)
 
     def print_excel(self):
-        for df in self.df_list:
-            pd.df.to_excel()
+        for df, f in zip(self.df_list, self.file_list):
+            df.to_excel('./output/' + f + '.xlsx',sheet_name='all_ROP')
