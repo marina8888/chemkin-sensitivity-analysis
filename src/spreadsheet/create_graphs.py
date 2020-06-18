@@ -8,7 +8,7 @@ plt.style.use('seaborn-notebook')
 
 
 class Graph():
-    def __init__(self, title: str, list_of_eq:list, x_axis_label: str = 'Sensitivity', x_graph_size: int = 6,
+    def __init__(self, title: str, x_axis_label: str = 'Sensitivity', x_graph_size: int = 6,
                  y_graph_size: int = 6.5):
         """
         Initialise a graph, based on object arguments. One figure is created per new graph object.
@@ -25,20 +25,7 @@ class Graph():
 
         # set format variables and format the figure:
         self.x_axis_label = x_axis_label
-        self.list_of_eq = list_of_eq
-        self.title = title
-
-        self.add_format()
-
-    def add_format(self):
-        """
-        Format graph. Add title, axies, tight layout, padding and grid.
-        :return:
-        """
-        # add title, names and layout:
-        plt.title(self.title, pad=15, figure=self.fig)
-        plt.xlabel(self.x_axis_label, figure=self.fig)
-        self.ax.set_xticklabels(self.list_of_eq, figure=self.fig)
+        plt.title(title, pad=15, figure=self.fig)
 
     def find_col_headers(self, df, eq_list, gas=None):
         '''
@@ -66,34 +53,71 @@ class Graph():
             return filtered_eqs
 
     def find_col_values(self, df, list, Xcm_val):
-        # for l in list:
-        #     print(df.iloc[l][Xcm_val])
-        # print('printed values')
-        print(df.loc[Xcm_val: 'Temperature_Sens_HNO+H<=>H2+NO_GasRxn#273 ()'])
+        d_name = []
+        d_val = []
 
-    def plot_bar_species(self, name_of_folder_n_sheet: str, gas_to_add: str, legend: str, multiplier: float = 1,
-                         colour: str = 'red', X_cm: float = 0.02, all_eq: bool = False):
+        for l in list:
+            # filter and take relevant values from dataframe and add to list. Extract all values as a list of lists
+            mask = df['Distance (m)'] == Xcm_val
+            data_df = df[mask]
+            d = pd.Series(data_df[l])
+            d_name.append(d.name.split('_')[2])
+            d_val.append(d.values[0])
+        return d_val, d_name
+
+    def plot_bar(self, col_val, col_label, gas_to_add):
+        if col_val is not None:
+            # bar chart settings:
+            bar_width = 0.25
+            ind = np.arange(len(col_label))
+            print(col_val)
+            print(col_label)
+
+            self.ax.barh(ind, col_val, bar_width, label='Sensitivity for ' + gas_to_add, align='edge',
+                         tick_label=col_label, zorder = 10)
+            # Move left y-axis and bottim x-axis to centre, passing through (0,0)
+            self.ax.spines['left'].set_position('zero')
+            self.ax.spines['bottom'].set_position('zero')
+
+            # Eliminate upper and right axes
+            self.ax.spines['right'].set_color('none')
+            self.ax.spines['top'].set_color('none')
+
+            # Show ticks in the left and lower axes only
+            self.ax.xaxis.set_ticks_position('bottom')
+            self.ax.yaxis.set_ticks_position('right')
+
+            # Set ticks:
+            self.ax.grid(b=True, which='major', linestyle='-', linewidth='1.0', color='gainsboro', zorder=0,
+                         figure=self.fig)
+            self.ax.grid(b=True, which='minor', linestyle=':', linewidth='0.5', color='silver', zorder=0,
+                         figure=self.fig)
+            self.ax.legend()
+
+    def plot_bar_species(self, name_of_folder_n_sheet: str, gas_to_add: str, list_of_eq=None, multiplier: float = 1,
+                         colour: str = 'red', X_cm: float = 0.02, offset: float = 0):
         '''
         this function takes REACTION SENSITIVITY values from a spreadsheet at default distance X(cm) = 2.0 and plots them.
         The  user can modify this distance to better describe the point at which gases were samples,
-        (which is usually the end point of the combustor)
+        (which is usually the end point of the combustor).
         '''
         # convert data into df called sens_df:
         full_path = os.path.join('./data/', name_of_folder_n_sheet)
         sens_df = pd.read_csv(full_path)
-        sens_df.set_index('Distance (m)', inplace=True)
 
         # initalise x axis labels and x axis values:
         list_col_h = []
         col_val = []
+        col_label = []
 
         # find 'gas + equation' (from equation list) in column headers and add to list_col_h the true column headers:
-        if all_eq is False:
-            list_col_h = self.find_col_headers(sens_df, self.list_of_eq, gas_to_add)
+        if list_of_eq is not None:
+            list_col_h = self.find_col_headers(sens_df, list_of_eq, gas_to_add)
 
-        elif all_eq is True:
+        # plot gas match for all equations in df:
+        else:
+            print(sens_df.columns.values)
             all_eq_list = []
-            # plot gas match for all equations in df, not just those mentioned when Graph() object was initialised.
             for s in sens_df.columns.values:
                 try:
                     h = s.split('_')[2]
@@ -101,26 +125,11 @@ class Graph():
                         all_eq_list.append(s.split('_')[2])
                 except IndexError:
                     print(s + ' not added to eq list because its not an equation')
-        # modify the x label so it now includes all equations, not just those added when a Graph object was initialised
-            plt.xlabel(all_eq_list, figure=self.fig)
             list_col_h = self.find_col_headers(sens_df, all_eq_list, gas_to_add)
 
         if list_col_h is not None:
-            col_val = self.find_col_values(sens_df, list_col_h, X_cm)
-
-        print('col val found')
-
-        if col_val is not None:
-
-            # bar chart settings:
-            bar_width = 0.25
-            ind = np.arange(len(col_val))
-
-            self.ax.barh(ind, col_val, bar_width, align='center')
-
-            # Add some text for labels, title and custom x-axis tick labels, etc.
-            self.ax.set_xticks(ind + bar_width / 2)
-            self.ax.legend()
+            col_val, col_label = self.find_col_values(sens_df, list_col_h, X_cm)
+            self.plot_bar(col_val, col_label, gas_to_add)
 
     def plot_bar_lam_burning_v(self, name_of_folder_n_sheet: str, legend: str, multiplier: float = 1,
                                colour: str = 'green', X_cm: int = 0):
