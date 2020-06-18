@@ -65,11 +65,14 @@ class Graph():
         else:
             return filtered_eqs
 
-    def find_col_values(self):
-        pass
+    def find_col_values(self, df, list, Xcm_val):
+        # for l in list:
+        #     print(df.iloc[l][Xcm_val])
+        # print('printed values')
+        print(df.loc[Xcm_val: 'Temperature_Sens_HNO+H<=>H2+NO_GasRxn#273 ()'])
 
     def plot_bar_species(self, name_of_folder_n_sheet: str, gas_to_add: str, legend: str, multiplier: float = 1,
-                         colour: str = 'red', X_cm: int = 2, all_eq: bool = False):
+                         colour: str = 'red', X_cm: float = 0.02, all_eq: bool = False):
         '''
         this function takes REACTION SENSITIVITY values from a spreadsheet at default distance X(cm) = 2.0 and plots them.
         The  user can modify this distance to better describe the point at which gases were samples,
@@ -78,6 +81,12 @@ class Graph():
         # convert data into df called sens_df:
         full_path = os.path.join('./data/', name_of_folder_n_sheet)
         sens_df = pd.read_csv(full_path)
+        sens_df.set_index('Distance (m)', inplace=True)
+
+        # initalise x axis labels and x axis values:
+        list_col_h = []
+        col_val = []
+
         # find 'gas + equation' (from equation list) in column headers and add to list_col_h the true column headers:
         if all_eq is False:
             list_col_h = self.find_col_headers(sens_df, self.list_of_eq, gas_to_add)
@@ -97,17 +106,20 @@ class Graph():
             list_col_h = self.find_col_headers(sens_df, all_eq_list, gas_to_add)
 
         if list_col_h is not None:
+            col_val = self.find_col_values(sens_df, list_col_h, X_cm)
 
-            # use the column headers in list_col_h to return a list of values located at X(cm)
+        print('col val found')
+
+        if col_val is not None:
 
             # bar chart settings:
             bar_width = 0.25
-            ind = np.arange(len(list_col_h))
+            ind = np.arange(len(col_val))
 
-            self.ax.barh(ind, list_col_h, bar_width, align='center')
+            self.ax.barh(ind, col_val, bar_width, align='center')
 
             # Add some text for labels, title and custom x-axis tick labels, etc.
-            ax.set_xticks(ind + bar_width / 2)
+            self.ax.set_xticks(ind + bar_width / 2)
             self.ax.legend()
 
     def plot_bar_lam_burning_v(self, name_of_folder_n_sheet: str, legend: str, multiplier: float = 1,
