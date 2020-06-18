@@ -8,7 +8,7 @@ plt.style.use('seaborn-notebook')
 
 
 class Graph():
-    def __init__(self, list_of_eq: list, title: str, x_axis_label: str = 'Sensitivity', x_graph_size: int = 6,
+    def __init__(self, title: str, list_of_eq:list, x_axis_label: str = 'Sensitivity', x_graph_size: int = 6,
                  y_graph_size: int = 6.5):
         """
         Initialise a graph, based on object arguments. One figure is created per new graph object.
@@ -25,12 +25,10 @@ class Graph():
 
         # set format variables and format the figure:
         self.x_axis_label = x_axis_label
-        self.list_of_x = list_of_eq
+        self.list_of_eq = list_of_eq
         self.title = title
 
         self.add_format()
-
-        self.list_of_eq = list_of_eq
 
     def add_format(self):
         """
@@ -40,67 +38,83 @@ class Graph():
         # add title, names and layout:
         plt.title(self.title, pad=15, figure=self.fig)
         plt.xlabel(self.x_axis_label, figure=self.fig)
-        self.ax.set_xticklabels(self.list_of_x, figure=self.fig)
+        self.ax.set_xticklabels(self.list_of_eq, figure=self.fig)
 
-    def find_col_headers(self, list_val, df, gas=None):
+    def find_col_headers(self, df, eq_list, gas=None):
         '''
         find 'gas + equation' (from equation list) in column headers and add to list_val the true column headers:
         '''
+        filtered_eqs = []
+        # call this for species sensitivity:
         if gas is not None:
-            # call this version for species sensitivity:
-            for eq in self.list_of_x:
+            for eq in eq_list:
                 column_header = gas + '_Sens_' + eq
-                res = filter(lambda x: column_header in x, df.columns.values)
-                if res.startswith(gas):
-                    list_val.append(res)
-                    print(list_val)
-                else:
-                    list_val.append(0)
-                    print(list_val)
+                filtered_eqs += (list(filter(lambda x: column_header in x, df.columns.values)))
+            print(filtered_eqs)
+            print('...is loop')
+
+            for r in filtered_eqs:
+                if not r.startswith(gas + '_'):
+                    filtered_eqs.remove(r)
+            print(filtered_eqs)
+            print('...is filtered_eqs')
+
+        # call this for laminar burning velocity sensitivity:
         else:
-            # call this version for laminar burning velocity sensitivity:
-            for eq in self.list_of_x:
+            for eq in self.list_of_eq:
                 column_header = 'Flow_rate_Sens_' + eq
-                res = filter(lambda x: column_header in x, df.columns.values)
+                filtered_eqs = list(filter(lambda x: column_header in x, df.columns.values))
 
-                if res is None:
-                    list_val.append(0)
-                    print(list_val)
-                else:
-                    list_val.append(res)
-                print(list_val)
-
-        return list_val
+        if not filtered_eqs:
+            print('no values for equations that contain the gas provided:')
+            return None
+        else:
+            return filtered_eqs
 
     def find_col_values(self):
         pass
 
     def plot_bar_species(self, name_of_folder_n_sheet: str, gas_to_add: str, legend: str, multiplier: float = 1,
-                         colour: str = 'red', X_cm: int = 2):
+                         colour: str = 'red', X_cm: int = 2, all_eq_list: bool = False ):
         '''
         this function takes REACTION SENSITIVITY values from a spreadsheet at default distance X(cm) = 2.0 and plots them.
         The  user can modify this distance to better describe the point at which gases were samples,
         (which is usually the end point of the combustor)
         '''
         # convert data into df called sens_df:
-        list_val = []
         full_path = os.path.join('./data/', name_of_folder_n_sheet)
         sens_df = pd.read_csv(full_path)
 
-        # find 'gas + equation' (from equation list) in column headers and add to list_val the true column headers:
-        self.find_col_headers(list_val, sens_df, gas_to_add)
+        # find 'gas + equation' (from equation list) in column headers and add to list_col_h the true column headers:
+        if all_eq_list is False:
+            list_col_h = self.find_col_headers(sens_df, self.list_of_eq, gas_to_add)
+        elif all_eq_list is True:
+            # plot gas match for all equations in df, not just those mentioned when Graph() object was initialised.
+            all_eq_list = []
+            for s in sens_df.columns.values:
+                try:
+                    h = s.split('_')[2]
+                    if '=' in h and h not in all_eq_list:
+                        all_eq_list.append(s.split('_')[2])
+                except IndexError:
+                    print(s + ' not added to eq list because its not an equation')
+        # modify the x label so it now includes all equations, not just those added when a Graph object was initialised
+            plt.xlabel(all_eq_list, figure=self.fig)
+            list_col_h = self.find_col_headers(sens_df, all_eq_list, gas_to_add)
 
-        # use the column headers in list_val to return a list of values located at X(cm)
+        if list_col_h is not None:
 
-        # bar chart settings:
-        bar_width = 0.25
-        ind = np.arange(len(list_val))
+            # use the column headers in list_col_h to return a list of values located at X(cm)
 
-        self.ax.barh(ind, list_val, bar_width, align='center')
+            # bar chart settings:
+            bar_width = 0.25
+            ind = np.arange(len(list_col_h))
 
-        # Add some text for labels, title and custom x-axis tick labels, etc.
-        ax.set_xticks(ind + bar_width / 2)
-        self.ax.legend()
+            self.ax.barh(ind, list_col_h, bar_width, align='center')
+
+            # Add some text for labels, title and custom x-axis tick labels, etc.
+            ax.set_xticks(ind + bar_width / 2)
+            self.ax.legend()
 
     def plot_bar_lam_burning_v(self, name_of_folder_n_sheet: str, legend: str, multiplier: float = 1,
                                colour: str = 'green', X_cm: int = 0):
