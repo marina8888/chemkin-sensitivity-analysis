@@ -78,7 +78,9 @@ class Graph():
     def plot_bar_species(self, name_of_folder_n_sheet: str, gas_to_add: str, legend: str, multiplier: float = 1,
                          colour: str = 'red', X_cm: int = 2):
         '''
-        this function takes REACTION SENSITIVITY values from a spreadsheet at a certain X(cm) distance and plots them.
+        this function takes REACTION SENSITIVITY values from a spreadsheet at default distance X(cm) = 2.0 and plots them.
+        The  user can modify this distance to better describe the point at which gases were samples,
+        (which is usually the end point of the combustor)
         '''
         # convert data into df called sens_df:
         list_val = []
@@ -104,6 +106,7 @@ class Graph():
                                colour: str = 'green', X_cm: int = 0):
         '''
         this function takes LAMINAR BURNING VELOCITY SENSITIVITY and plots it on a bar chart at default distance = 0 cm.
+        The  user can modify this distance to better describe where the unburnt mixture flowrate should be taken.
         '''
         pass
 
