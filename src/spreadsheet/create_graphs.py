@@ -50,14 +50,8 @@ class Graph():
             for eq in eq_list:
                 column_header = gas + '_Sens_' + eq
                 filtered_eqs += (list(filter(lambda x: column_header in x, df.columns.values)))
-            print(filtered_eqs)
-            print('...is loop')
 
-            for r in filtered_eqs:
-                if not r.startswith(gas + '_'):
-                    filtered_eqs.remove(r)
-            print(filtered_eqs)
-            print('...is filtered_eqs')
+            filtered_eqs = [f for f in filtered_eqs if f.startswith(gas + '_')]
 
         # call this for laminar burning velocity sensitivity:
         else:
@@ -75,7 +69,7 @@ class Graph():
         pass
 
     def plot_bar_species(self, name_of_folder_n_sheet: str, gas_to_add: str, legend: str, multiplier: float = 1,
-                         colour: str = 'red', X_cm: int = 2, all_eq_list: bool = False ):
+                         colour: str = 'red', X_cm: int = 2, all_eq: bool = False):
         '''
         this function takes REACTION SENSITIVITY values from a spreadsheet at default distance X(cm) = 2.0 and plots them.
         The  user can modify this distance to better describe the point at which gases were samples,
@@ -84,13 +78,13 @@ class Graph():
         # convert data into df called sens_df:
         full_path = os.path.join('./data/', name_of_folder_n_sheet)
         sens_df = pd.read_csv(full_path)
-
         # find 'gas + equation' (from equation list) in column headers and add to list_col_h the true column headers:
-        if all_eq_list is False:
+        if all_eq is False:
             list_col_h = self.find_col_headers(sens_df, self.list_of_eq, gas_to_add)
-        elif all_eq_list is True:
-            # plot gas match for all equations in df, not just those mentioned when Graph() object was initialised.
+
+        elif all_eq is True:
             all_eq_list = []
+            # plot gas match for all equations in df, not just those mentioned when Graph() object was initialised.
             for s in sens_df.columns.values:
                 try:
                     h = s.split('_')[2]
