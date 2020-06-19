@@ -65,7 +65,7 @@ class Graph():
             d_val.append(d.values[0])
         return d_val, d_name
 
-    def plot_bar(self, col_val, col_label, gas_to_add):
+    def plot_bar(self, col_val, col_label, colour, gas_to_add = None):
         if col_val is not None:
             # bar chart settings:
             bar_width = 0.25
@@ -73,8 +73,13 @@ class Graph():
             print(col_val)
             print(col_label)
 
-            self.ax.barh(ind, col_val, bar_width, label='Sensitivity for ' + gas_to_add, align='edge',
-                         tick_label=col_label, zorder = 10)
+            if gas_to_add is None:
+                self.ax.barh(ind, col_val, bar_width, label='Sensitivity for laminar burning velocity', align='edge',
+                             tick_label=col_label, zorder=10, colour=colour)
+
+            else:
+                self.ax.barh(ind, col_val, bar_width, label='Sensitivity for ' + gas_to_add, align='edge',
+                         tick_label=col_label, zorder = 10, colour = colour)
             # Move left y-axis and bottim x-axis to centre, passing through (0,0)
             self.ax.spines['left'].set_position('zero')
             self.ax.spines['bottom'].set_position('zero')
@@ -129,15 +134,30 @@ class Graph():
 
         if list_col_h is not None:
             col_val, col_label = self.find_col_values(sens_df, list_col_h, X_cm)
-            self.plot_bar(col_val, col_label, gas_to_add)
+            self.plot_bar(col_val*multiplier, col_label, colour, gas_to_add)
 
-    def plot_bar_lam_burning_v(self, name_of_folder_n_sheet: str, legend: str, multiplier: float = 1,
-                               colour: str = 'green', X_cm: int = 0):
+    def plot_bar_lam_burning_v(self, name_of_folder_n_sheet: str, list_of_eq=None, multiplier: float = 1,
+                         colour: str = 'red', X_cm: float = 0, offset: float = 0):
         '''
         this function takes LAMINAR BURNING VELOCITY SENSITIVITY and plots it on a bar chart at default distance = 0 cm.
         The  user can modify this distance to better describe where the unburnt mixture flowrate should be taken.
         '''
-        pass
+        # convert data into df called sens_df:
+        full_path = os.path.join('./data/', name_of_folder_n_sheet)
+        sens_df = pd.read_csv(full_path)
+
+        # initalise x axis labels and x axis values:
+        list_col_h = []
+        col_val = []
+        col_label = []
+
+        # find 'gas + equation' (from equation list) in column headers and add to list_col_h the true column headers:
+        list_col_h = self.find_col_headers(sens_df, list_of_eq)
+
+        if list_col_h is not None:
+            col_val, col_label = self.find_col_values(sens_df, list_col_h, X_cm)
+            self.plot_bar(col_val*multiplier, col_label, colour)
+
 
     def show_and_save(self, path_of_save_folder: str, name: str):
         """
