@@ -42,7 +42,7 @@ class Graph():
 
         # call this for laminar burning velocity sensitivity:
         else:
-            for eq in self.list_of_eq:
+            for eq in eq_list:
                 column_header = 'Flow_rate_Sens_' + eq
                 filtered_eqs = list(filter(lambda x: column_header in x, df.columns.values))
 
@@ -75,7 +75,7 @@ class Graph():
 
             if gas_to_add is None:
                 self.ax.barh(ind, col_val, bar_width, label='Sensitivity for laminar burning velocity', align='edge',
-                             tick_label=col_label, zorder=10, colour=colour)
+                             tick_label=col_label, zorder=10, color=colour)
 
             else:
                 self.ax.barh(ind, col_val, bar_width, label='Sensitivity for ' + gas_to_add, align='edge',
