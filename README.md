@@ -26,7 +26,7 @@ if __name__ == "__main__":
 ```
 
 ### Example graph: 
-[Sample code graph](src/output/graphs/test.png)
+![Sample code graph](src/website_images/test.png)
 
 
 ## src/spreadsheet/convert_rop_col:
