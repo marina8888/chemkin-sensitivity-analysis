@@ -1,6 +1,6 @@
 # chemkin-sensitivity-analysis
 
-## src/spreadsheet/create_graphs:
+## src/spreadsheet/create_graphs.py file:
 Uses matplotlib library to plot sensitivity data as bar charts. Sensitivity data must be generated using CHEMKIN postprocessing GUI.
 
 ### Sample code: 
@@ -43,7 +43,7 @@ Assumes the use of laminar flame calculator module for calculating the laminar b
 ```
 A multiplier is available to scale up all values.
 
-## src/spreadsheet/convert_rop_col:
+## src/spreadsheet/convert_rop_col.py file:
 WARNING - THIS SCRIPT IS HERE FOR REFERENCE ONLY. PLEASE PRE-PROCESS CHEMKIN CHEMISTRY IN THE GUI GENERATE WELL-FORMATED COLUMN HEADERS INSTEAD OF USING THIS SCRIPT. 
 
 This script finds csv file column headers named in the format: `<GAS>_ROP_GasRxn#<number> (mole/cm3-sec)`, where <GAS> is the sensitivity of a considered gas, ROP stands for rate of production, and <number> is a reaction number from a mechanism. 
