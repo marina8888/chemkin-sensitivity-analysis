@@ -31,7 +31,7 @@ if __name__ == "__main__":
 ![Sample code graph](src/website_images/test.png)
 
 ### Constraints:
-Assumes the use of laminar flame calculator module for calculating the laminar burning velocity sensitivity. Please note that the distance X at which you need the sensitivities to be taken at should be included in the function arguments, and will be in the same units as the spreadsheet, as per description: 
+Assumes the use of laminar flame calculator module for calculating the laminar burning velocity sensitivity. Please note that the __distance X at which you need the sensitivities to be taken at should be included in the function arguments,__ and will be in the same units as the spreadsheet, as per description: 
 
 ```
     def plot_bar_species(self, name_of_folder_n_sheet: str, gas_to_add: str, list_of_eq: list = None, multiplier: float = 1,
@@ -44,7 +44,15 @@ Assumes the use of laminar flame calculator module for calculating the laminar b
 ```
 A multiplier is available to scale up all values.
 
-
+A similar format is used for laminar burning velocity sensitivity: 
+```
+    def plot_bar_lam_burning_v(self, name_of_folder_n_sheet: str, list_of_eq=None, multiplier: float = 1,
+                               colour: str = 'red', X: float = 0, offset: float = 0):
+        '''
+        this function takes LAMINAR BURNING VELOCITY SENSITIVITY and plots it on a bar chart at default distance = 0 cm.
+        The  user can modify this distance to better describe where the unburnt mixture flowrate should be taken.
+        '''
+```
 
 ## src/spreadsheet/convert_rop_col.py file:
 WARNING - THIS SCRIPT IS HERE FOR REFERENCE ONLY. PLEASE PRE-PROCESS CHEMKIN CHEMISTRY IN THE GUI GENERATE WELL-FORMATED COLUMN HEADERS INSTEAD OF USING THIS SCRIPT. 
