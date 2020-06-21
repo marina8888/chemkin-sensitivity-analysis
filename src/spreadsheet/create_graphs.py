@@ -65,7 +65,7 @@ class Graph():
             d_val.append(d.values[0])
         return d_val, d_name
 
-    def plot_bar(self, col_val, col_label, colour, gas_to_add = None):
+    def plot_bar(self, col_val, col_label, colour, gas_to_add = None, offset = 0):
         if col_val is not None:
             # bar chart settings:
             bar_width = 0.25
@@ -74,12 +74,12 @@ class Graph():
             print(col_label)
 
             if gas_to_add is None:
-                self.ax.barh(ind, col_val, bar_width, label='Sensitivity for laminar burning velocity', align='edge',
+                self.ax.barh(ind+offset, col_val, bar_width, label='Sensitivity for laminar burning velocity', align='edge',
                              tick_label=col_label, zorder=10, color=colour)
 
             else:
-                self.ax.barh(ind, col_val, bar_width, label='Sensitivity for ' + gas_to_add, align='edge',
-                         tick_label=col_label, zorder = 10, colour = colour)
+                self.ax.barh(ind+offset, col_val, bar_width, label='Sensitivity for ' + gas_to_add, align='edge',
+                         tick_label=col_label, zorder = 10, color = colour)
             # Move left y-axis and bottim x-axis to centre, passing through (0,0)
             self.ax.spines['left'].set_position('zero')
             self.ax.spines['bottom'].set_position('zero')
@@ -99,8 +99,8 @@ class Graph():
                          figure=self.fig)
             self.ax.legend()
 
-    def plot_bar_species(self, name_of_folder_n_sheet: str, gas_to_add: str, list_of_eq=None, multiplier: float = 1,
-                         colour: str = 'red', X_cm: float = 0.02, offset: float = 0):
+    def plot_bar_species(self, name_of_folder_n_sheet: str, gas_to_add: str, list_of_eq: list = None, multiplier: float = 1,
+                         colour: str = 'b', X_cm: float = 0.02, offset: float = 0):
         '''
         this function takes REACTION SENSITIVITY values from a spreadsheet at default distance X(cm) = 2.0 and plots them.
         The  user can modify this distance to better describe the point at which gases were samples,
@@ -134,7 +134,7 @@ class Graph():
 
         if list_col_h is not None:
             col_val, col_label = self.find_col_values(sens_df, list_col_h, X_cm)
-            self.plot_bar(col_val*multiplier, col_label, colour, gas_to_add)
+            self.plot_bar(col_val*multiplier, col_label, colour, gas_to_add, offset=offset)
 
     def plot_bar_lam_burning_v(self, name_of_folder_n_sheet: str, list_of_eq=None, multiplier: float = 1,
                          colour: str = 'red', X_cm: float = 0, offset: float = 0):
@@ -155,7 +155,7 @@ class Graph():
         print(list_col_h)
         if list_col_h is not None:
             col_val, col_label = self.find_col_values(sens_df, list_col_h, X_cm, 3)
-            self.plot_bar(col_val*multiplier, col_label, colour)
+            self.plot_bar(col_val*multiplier, col_label, colour, offset=offset)
 
 
     def show_and_save(self, path_of_save_folder: str, name: str):
