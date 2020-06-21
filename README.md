@@ -27,7 +27,7 @@ if __name__ == "__main__":
     main()
 ```
 
-### Example graph: 
+### Example graph (generated from sample code above):
 ![Sample code graph](src/website_images/test.png)
 
 ### Constraints:
