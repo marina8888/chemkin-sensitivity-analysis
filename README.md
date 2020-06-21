@@ -30,8 +30,7 @@ if __name__ == "__main__":
 ### Example graph (generated from sample code above):
 ![Sample code graph](src/website_images/test.png)
 
-### Constraints:
-Assumes the use of laminar flame calculator module for calculating the laminar burning velocity sensitivity. Please note that the __distance X at which you need the sensitivities to be taken at should be included in the function arguments,__ and will be in the same units as the spreadsheet, as per description: 
+Please note that the __distance X at which you need the sensitivities to be taken at should be included in the function arguments,__ and will be in the same units as the spreadsheet, as per description for plotting species sensitivities: 
 
 ```
     def plot_bar_species(self, name_of_folder_n_sheet: str, gas_to_add: str, list_of_eq: list = None, multiplier: float = 1,
@@ -42,9 +41,10 @@ Assumes the use of laminar flame calculator module for calculating the laminar b
         (which is usually the end point of the combustor).
         """
 ```
-A multiplier is available to scale up all values.
+A multiplier is available to scale up all values. If equations are not specified here, all equations pertinent the species of interest will be plotted. 
 
-A similar format is used for laminar burning velocity sensitivity: 
+
+Assumes the use of laminar flame calculator module for calculating the laminar burning velocity sensitivity, which uses similar argument list: 
 ```
     def plot_bar_lam_burning_v(self, name_of_folder_n_sheet: str, list_of_eq=None, multiplier: float = 1,
                                colour: str = 'red', X: float = 0, offset: float = 0):
