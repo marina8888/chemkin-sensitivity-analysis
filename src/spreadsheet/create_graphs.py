@@ -18,13 +18,13 @@ class Graph():
         :param x_graph_size: default to almost square size 6 (increase number to change size ratio or increase resolution)
         :param y_graph_size: and default to almost square size 6.5 (increase number to change size ratio or increase resolution)
         """
-        self.fig = plt.figure(figsize=(x_graph_size, y_graph_size))
+        self.fig, self.ax = plt.subplots(figsize=(x_graph_size, y_graph_size))
 
         # get access to axies functions:
-        self.ax = self.fig.gca()
+
 
         # set format variables and format the figure:
-        self.x_axis_label = x_axis_label
+        plt.xlabel(x_axis_label)
         plt.title(title, pad=15, figure=self.fig)
 
     def find_col_headers(self, df, eq_list, gas=None):
