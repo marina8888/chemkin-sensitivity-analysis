@@ -4,6 +4,7 @@
 Uses matplotlib library to plot sensitivity data as bar charts. Sensitivity data must be generated using CHEMKIN postprocessing GUI.
 
 ### Sample code: 
+To generate graphs your chemkin spreadsheets should be uploaded to a new folder in the src folder. To plot, a graph object must be created in src/main.py, where graph_object.plot_bar_ functions can be used to plot the sensitivities as follows:
 ```
 from spreadsheet import create_graphs
 
@@ -28,6 +29,19 @@ if __name__ == "__main__":
 ### Example graph: 
 ![Sample code graph](src/website_images/test.png)
 
+### Constraints:
+Assumes the use of laminar flame calculator module for calculating the laminar burning velocity sensitivity. Please note that the distance X at which you need the sensitivities to be taken at should be included in the function arguments, and will be in the same units as the spreadsheet, as per description: 
+
+```
+    def plot_bar_species(self, name_of_folder_n_sheet: str, gas_to_add: str, list_of_eq: list = None, multiplier: float = 1,
+                         colour: str = 'b', X: float = 0.02, offset: float = 0):
+        """
+        This function takes REACTION SENSITIVITY values from a spreadsheet at default distance X(cm) = 2.0 and plots them.
+        The  user can modify this distance to better describe the point at which gases were samples,
+        (which is usually the end point of the combustor).
+        """
+```
+A multiplier is available to scale up all values.
 
 ## src/spreadsheet/convert_rop_col:
 WARNING - THIS SCRIPT IS HERE FOR REFERENCE ONLY. PLEASE PRE-PROCESS CHEMKIN CHEMISTRY IN THE GUI GENERATE WELL-FORMATED COLUMN HEADERS INSTEAD OF USING THIS SCRIPT. 
