@@ -44,7 +44,7 @@ class Graph():
         else:
             for eq in eq_list:
                 column_header = 'Flow_rate_Sens_' + eq
-                filtered_eqs = list(filter(lambda x: column_header in x, df.columns.values))
+                filtered_eqs += list(filter(lambda x: column_header in x, df.columns.values))
 
         if not filtered_eqs:
             print('no values for equations that contain the gas provided:')
@@ -52,7 +52,7 @@ class Graph():
         else:
             return filtered_eqs
 
-    def find_col_values(self, df, list, Xcm_val):
+    def find_col_values(self, df, list, Xcm_val, i : int = 2):
         d_name = []
         d_val = []
 
@@ -61,7 +61,7 @@ class Graph():
             mask = df['Distance (m)'] == Xcm_val
             data_df = df[mask]
             d = pd.Series(data_df[l])
-            d_name.append(d.name.split('_')[2])
+            d_name.append(d.name.split('_')[i])
             d_val.append(d.values[0])
         return d_val, d_name
 
@@ -145,7 +145,6 @@ class Graph():
         # convert data into df called sens_df:
         full_path = os.path.join('./data/', name_of_folder_n_sheet)
         sens_df = pd.read_csv(full_path)
-
         # initalise x axis labels and x axis values:
         list_col_h = []
         col_val = []
@@ -153,9 +152,9 @@ class Graph():
 
         # find 'gas + equation' (from equation list) in column headers and add to list_col_h the true column headers:
         list_col_h = self.find_col_headers(sens_df, list_of_eq)
-
+        print(list_col_h)
         if list_col_h is not None:
-            col_val, col_label = self.find_col_values(sens_df, list_col_h, X_cm)
+            col_val, col_label = self.find_col_values(sens_df, list_col_h, X_cm, 3)
             self.plot_bar(col_val*multiplier, col_label, colour)
 
 
