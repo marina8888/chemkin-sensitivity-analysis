@@ -28,6 +28,7 @@ if __name__ == "__main__":
 ```
 
 ### Example graph (generated from sample code above):
+
 ![Sample code graph](src/website_images/test.png)
 
 Please note that the __distance X at which you need the sensitivities to be taken at should be included in the function arguments,__ and will be in the same units as the spreadsheet, as per description for plotting species sensitivities: 
