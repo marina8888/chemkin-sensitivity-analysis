@@ -68,10 +68,8 @@ class Graph():
     def plot_bar(self, col_val, col_label, colour, gas_to_add = None, offset = 0):
         if col_val is not None:
             # bar chart settings:
-            bar_width = 0.25
+            bar_width = 0.15
             ind = np.arange(len(col_label))
-            print(col_val)
-            print(col_label)
 
             if gas_to_add is None:
                 self.ax.barh(ind+offset, col_val, bar_width, label='Sensitivity for laminar burning velocity', align='edge',
@@ -121,7 +119,6 @@ class Graph():
 
         # plot gas match for all equations in df:
         else:
-            print(sens_df.columns.values)
             all_eq_list = []
             for s in sens_df.columns.values:
                 try:
@@ -134,6 +131,14 @@ class Graph():
 
         if list_col_h is not None:
             col_val, col_label = self.find_col_values(sens_df, list_col_h, X_cm)
+
+
+            #if column does not exist in col label, assign value = 0 to it and add label:
+            for eq in list_of_eq:
+                if eq not in col_label:
+                    col_label.append(eq)
+                    col_val.append(0)
+
             self.plot_bar(col_val*multiplier, col_label, colour, gas_to_add, offset=offset)
 
     def plot_bar_lam_burning_v(self, name_of_folder_n_sheet: str, list_of_eq=None, multiplier: float = 1,
@@ -152,9 +157,15 @@ class Graph():
 
         # find 'gas + equation' (from equation list) in column headers and add to list_col_h the true column headers:
         list_col_h = self.find_col_headers(sens_df, list_of_eq)
-        print(list_col_h)
         if list_col_h is not None:
             col_val, col_label = self.find_col_values(sens_df, list_col_h, X_cm, 3)
+
+            #if column does not exist in col label, assign value = 0 to it and add label:
+            for eq in list_of_eq:
+                if eq not in col_label:
+                    col_label.append(eq)
+                    col_val.append(0)
+
             self.plot_bar(col_val*multiplier, col_label, colour, offset=offset)
 
 
