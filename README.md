@@ -1,7 +1,7 @@
 # chemkin-sensitivity-analysis
 
 ## To Install on macOS:
-1. Go to [macOS installation file](https://github.com/marina8888/command-line-chemkin/blob/master/install_files/install_mac.sh), click on the Raw button and right click Save As to save the installation script. Please save it in the directory where you want this project to be saved (e.g the Developer folder)
+1. Go to [macOS installation file](https://github.com/marina8888/chemkin-sensitivity-analysis/blob/master/src/install_files/macos_install.sh), click on the Raw button and right click Save As to save the installation script. Please save it in the directory where you want this project to be saved (e.g the Developer folder)
 2. Go to terminal and type `cd path/to/where/your/installation/script/is/saved` to go to the directory with the installation script
 3. Once in this directory, type `./install_mac.sh` to install the project and its dependencies 
 4. Once the installation in complete, enter the folder by typing: `cd command-line-chemkin`
