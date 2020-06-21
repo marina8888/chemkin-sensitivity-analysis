@@ -66,6 +66,9 @@ class Graph():
         return d_val, d_name
 
     def plot_bar(self, col_val, col_label, colour, gas_to_add = None, offset = 0):
+        """
+        Simple bar graph plot including setting ticks and correct axis locations.
+        """
         if col_val is not None:
             # bar chart settings:
             bar_width = 0.15
@@ -98,14 +101,14 @@ class Graph():
             self.ax.legend()
 
     def plot_bar_species(self, name_of_folder_n_sheet: str, gas_to_add: str, list_of_eq: list = None, multiplier: float = 1,
-                         colour: str = 'b', X_cm: float = 0.02, offset: float = 0):
-        '''
-        this function takes REACTION SENSITIVITY values from a spreadsheet at default distance X(cm) = 2.0 and plots them.
+                         colour: str = 'b', X: float = 0.02, offset: float = 0):
+        """
+        This function takes REACTION SENSITIVITY values from a spreadsheet at default distance X(cm) = 2.0 and plots them.
         The  user can modify this distance to better describe the point at which gases were samples,
         (which is usually the end point of the combustor).
-        '''
+        """
         # convert data into df called sens_df:
-        full_path = os.path.join('./data/', name_of_folder_n_sheet)
+        full_path = os.path.join(name_of_folder_n_sheet)
         sens_df = pd.read_csv(full_path)
 
         # initalise x axis labels and x axis values:
@@ -130,7 +133,7 @@ class Graph():
             list_col_h = self.find_col_headers(sens_df, all_eq_list, gas_to_add)
 
         if list_col_h is not None:
-            col_val, col_label = self.find_col_values(sens_df, list_col_h, X_cm)
+            col_val, col_label = self.find_col_values(sens_df, list_col_h, X)
 
 
             #if column does not exist in col label, assign value = 0 to it and add label:
@@ -139,16 +142,19 @@ class Graph():
                     col_label.append(eq)
                     col_val.append(0)
 
-            self.plot_bar(col_val*multiplier, col_label, colour, gas_to_add, offset=offset)
+            print(col_val)
+            col_val = [x * multiplier for x in col_val]
+            print(col_val)
+            self.plot_bar(col_val, col_label, colour, gas_to_add, offset=offset)
 
     def plot_bar_lam_burning_v(self, name_of_folder_n_sheet: str, list_of_eq=None, multiplier: float = 1,
-                         colour: str = 'red', X_cm: float = 0, offset: float = 0):
+                               colour: str = 'red', X: float = 0, offset: float = 0):
         '''
         this function takes LAMINAR BURNING VELOCITY SENSITIVITY and plots it on a bar chart at default distance = 0 cm.
         The  user can modify this distance to better describe where the unburnt mixture flowrate should be taken.
         '''
         # convert data into df called sens_df:
-        full_path = os.path.join('./data/', name_of_folder_n_sheet)
+        full_path = os.path.join(name_of_folder_n_sheet)
         sens_df = pd.read_csv(full_path)
         # initalise x axis labels and x axis values:
         list_col_h = []
@@ -158,7 +164,7 @@ class Graph():
         # find 'gas + equation' (from equation list) in column headers and add to list_col_h the true column headers:
         list_col_h = self.find_col_headers(sens_df, list_of_eq)
         if list_col_h is not None:
-            col_val, col_label = self.find_col_values(sens_df, list_col_h, X_cm, 3)
+            col_val, col_label = self.find_col_values(sens_df, list_col_h, X, 3)
 
             #if column does not exist in col label, assign value = 0 to it and add label:
             for eq in list_of_eq:
@@ -166,7 +172,8 @@ class Graph():
                     col_label.append(eq)
                     col_val.append(0)
 
-            self.plot_bar(col_val*multiplier, col_label, colour, offset=offset)
+            col_val =  [x * multiplier for x in col_val]
+            self.plot_bar(col_val, col_label, colour, offset=offset)
 
 
     def show_and_save(self, path_of_save_folder: str, name: str):
