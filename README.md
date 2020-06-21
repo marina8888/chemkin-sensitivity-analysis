@@ -3,6 +3,7 @@
 ## src/spreadsheet/create_graphs.py file:
 Uses matplotlib library to plot sensitivity data as bar charts. Sensitivity data must be generated using CHEMKIN postprocessing GUI.
 
+
 ### Sample code: 
 To generate graphs your chemkin spreadsheets should be uploaded to a new folder in the src folder. To plot, a graph object must be created in src/main.py, where graph_object.plot_bar_ functions can be used to plot the sensitivities as follows:
 ```
@@ -42,6 +43,8 @@ Assumes the use of laminar flame calculator module for calculating the laminar b
         """
 ```
 A multiplier is available to scale up all values.
+
+
 
 ## src/spreadsheet/convert_rop_col.py file:
 WARNING - THIS SCRIPT IS HERE FOR REFERENCE ONLY. PLEASE PRE-PROCESS CHEMKIN CHEMISTRY IN THE GUI GENERATE WELL-FORMATED COLUMN HEADERS INSTEAD OF USING THIS SCRIPT. 
