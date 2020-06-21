@@ -7,7 +7,7 @@
 4. Once the installation in complete, enter the folder by typing: `cd command-line-chemkin`
 5. Activate your python environment by typing: `cd source bin/activate`
 6. You can now launch the project from your text editor of choice (pycharm, Atom, Sublime text etc.) src is the root directory.
-7. Please type any instruction commands in src/main.py. Full list is included in the Functions section. 
+7. Please type any instruction commands in src/main.py. Please see the sample code section for more details.
 
 ## To Install on Windows:
 Coming soon...
