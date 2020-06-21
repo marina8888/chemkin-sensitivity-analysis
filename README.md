@@ -1,5 +1,18 @@
 # chemkin-sensitivity-analysis
 
+## To Install on macOS:
+1. Go to [macOS installation file](https://github.com/marina8888/command-line-chemkin/blob/master/install_files/install_mac.sh), click on the Raw button and right click Save As to save the installation script. Please save it in the directory where you want this project to be saved (e.g the Developer folder)
+2. Go to terminal and type `cd path/to/where/your/installation/script/is/saved` to go to the directory with the installation script
+3. Once in this directory, type `./install_mac.sh` to install the project and its dependencies 
+4. Once the installation in complete, enter the folder by typing: `cd command-line-chemkin`
+5. Activate your python environment by typing: `cd source bin/activate`
+6. You can now launch the project from your text editor of choice (pycharm, Atom, Sublime text etc.) src is the root directory.
+7. Please type any instruction commands in src/main.py. Full list is included in the Functions section. 
+
+## To Install on Windows:
+Coming soon...
+
+
 ## src/spreadsheet/create_graphs.py file:
 Uses matplotlib library to plot sensitivity data as bar charts. Sensitivity data must be generated using CHEMKIN postprocessing GUI.
 
