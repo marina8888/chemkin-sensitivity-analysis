@@ -14,7 +14,7 @@ Coming soon...
 
 
 ## src/spreadsheet/create_graphs.py file:
-Uses matplotlib library to plot sensitivity data as bar charts. Sensitivity data must be generated using CHEMKIN postprocessing GUI.
+Uses matplotlib library to plot sensitivity data as bar charts. Sensitivity data must be saved in .csv file using the format CHEMKIN postprocessing tool uses to save data to spreadsheet.
 
 
 ### Sample code: 
