@@ -2,6 +2,7 @@ import matplotlib.pyplot as plt
 import os
 import pandas as pd
 import numpy as np
+import itertools
 
 # set a global style for all graphs:
 plt.style.use('seaborn-notebook')
@@ -70,7 +71,9 @@ class Graph():
         Simple bar graph plot including setting ticks and correct axis locations.
         """
         if col_val is not None:
-            # bar chart settings:
+            # sort in order for x labels to match:
+            col_label, col_val = zip(*sorted(zip(col_label, col_val)))
+
             bar_width = 0.15
             ind = np.arange(len(col_label))
 
@@ -141,10 +144,10 @@ class Graph():
                 if eq not in col_label:
                     col_label.append(eq)
                     col_val.append(0)
-
+            print('ok:')
             print(col_val)
+            print(col_label)
             col_val = [x * multiplier for x in col_val]
-            print(col_val)
             self.plot_bar(col_val, col_label, colour, gas_to_add, offset=offset)
 
     def plot_bar_lam_burning_v(self, name_of_folder_n_sheet: str, list_of_eq=None, multiplier: float = 1,
