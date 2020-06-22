@@ -1,5 +1,6 @@
 from spreadsheet import create_graphs
 
+# SAMPLE SCRIPT BELOW:
 def main():
 
     # Create a new graph:
