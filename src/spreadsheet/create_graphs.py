@@ -117,29 +117,32 @@ class Graph():
         list_col_h = []
         col_val = []
         col_label = []
+        # this is a list of all equations that must be considered for plotting:
+        list_of_eq_local = list_of_eq
 
         # find 'gas + equation' (from equation list) in column headers and add to list_col_h the true column headers:
-        if list_of_eq is not None:
-            list_col_h = self.find_col_headers(sens_df, list_of_eq, gas_to_add)
+        if list_of_eq_local is not None:
+            list_col_h = self.find_col_headers(sens_df, list_of_eq_local, gas_to_add)
 
         # plot gas match for all equations in df:
         else:
-            all_eq_list = []
+            full_eq_list_when_no_eq = []
             for s in sens_df.columns.values:
                 try:
                     h = s.split('_')[2]
-                    if '=' in h and h not in all_eq_list:
-                        all_eq_list.append(s.split('_')[2])
+                    if '=' in h and h not in full_eq_list_when_no_eq:
+                        full_eq_list_when_no_eq.append(s.split('_')[2])
                 except IndexError:
                     print(s + ' not added to eq list because its not an equation')
-            list_col_h = self.find_col_headers(sens_df, all_eq_list, gas_to_add)
+            list_of_eq_local = full_eq_list_when_no_eq
+            list_col_h = self.find_col_headers(sens_df, full_eq_list_when_no_eq, gas_to_add)
 
         if list_col_h is not None:
             col_val, col_label = self.find_col_values(sens_df, list_col_h, X)
 
 
             #if column does not exist in col label, assign value = 0 to it and add label:
-            for eq in list_of_eq:
+            for eq in list_of_eq_local:
                 if eq not in col_label:
                     col_label.append(eq)
                     col_val.append(0)
@@ -162,14 +165,30 @@ class Graph():
         list_col_h = []
         col_val = []
         col_label = []
+        list_of_eq_local = list_of_eq
+
+        if list_of_eq is not None:
+            list_col_h = self.find_col_headers(sens_df, list_of_eq)
+
+        # plot gas match for all equations in df:
+        else:
+            full_eq_list_when_no_eq = []
+            for s in sens_df.columns.values:
+                try:
+                    h = s.split('_')[2]
+                    if '=' in h and h not in full_eq_list_when_no_eq:
+                        full_eq_list_when_no_eq.append(s.split('_')[2])
+                except IndexError:
+                    print(s + ' not added to eq list because its not an equation')
+            list_of_eq_local = full_eq_list_when_no_eq
+            list_col_h = self.find_col_headers(sens_df, full_eq_list_when_no_eq)
 
         # find 'gas + equation' (from equation list) in column headers and add to list_col_h the true column headers:
-        list_col_h = self.find_col_headers(sens_df, list_of_eq)
         if list_col_h is not None:
             col_val, col_label = self.find_col_values(sens_df, list_col_h, X, 3)
 
             #if column does not exist in col label, assign value = 0 to it and add label:
-            for eq in list_of_eq:
+            for eq in list_of_eq_local:
                 if eq not in col_label:
                     col_label.append(eq)
                     col_val.append(0)
