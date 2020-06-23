@@ -27,7 +27,7 @@ def main():
     marina = create_graphs.Graph('Add My Title Here')
 
     #Add laminar burning velocity plot using CHEMKIN generated export.csv spreadsheet:
-    marina.plot_bar_lam_burning_v('okafor_lam_sens/export.csv', ['NH2+O<=>NH+OH', 'NH2+NO<=>NNH+OH','H+NO+M<=>HNO+M', 'HNO+H<=>H2+NO', 'H+O2<=>O+OH'])
+    marina.plot_bar_lam_burning_v('data/okafor_lam_sens/export.csv', filter_below = -0.02,filter_above = 0.02)
 
     #Add species plots for NO and NO2, with an offset create grouped bars:
     marina.plot_bar_species('./okafor_sens/Okafor_0.85_0.4sens.csv', 'NO', ['NH2+O<=>NH+OH', 'NH2+NO<=>NNH+OH','H+NO+M<=>HNO+M', 'HNO+H<=>H2+NO', 'H+O2<=>O+OH'], offset=0.15)
@@ -55,7 +55,7 @@ Please note that the __distance X at which you need the sensitivities to be take
         (which is usually the end point of the combustor).
         """
 ```
-A multiplier is available to scale up all values. If equations are not specified here, all equations pertinent the species of interest will be plotted. 
+A multiplier is available to scale up all values. If equations are not specified here, all equations pertinent the species of interest will be plotted. filter_above and filter_below are settings used for filtering data (above or below a certain value). Can use either one of the filters or both at the same time. 
 
 
 Assumes the use of laminar flame calculator module for calculating the laminar burning velocity sensitivity, which uses similar argument list: 
