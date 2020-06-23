@@ -52,17 +52,36 @@ class Graph():
         else:
             return filtered_eqs
 
-    def find_col_values(self, df, list, Xcm_val, i : int = 2):
+    def find_col_values(self, df, list, Xcm_val, i : int = 2, filter_above = None, filter_below = None):
         d_name = []
         d_val = []
 
+        mask1 = df['Distance (m)'] == Xcm_val
+        data_df = df[mask1].copy(deep = True)
+
+        # add filter condition to df:
+        if filter_above is not None and filter_below is not None:
+            data_df1 = data_df.loc[:,(data_df > filter_above).any()].copy(deep = True)
+            data_df2 = data_df.loc[:,(data_df < filter_below).any()].copy(deep = True)
+            data_df = data_df1.join([data_df2])
+            # data_df = data_df[(df > filter_above) & (df < filter_below)]
+        elif filter_above is not None:
+            print("filtering above")
+            data_df = data_df.loc[:, (data_df > filter_above).any()].copy(deep = True)
+
+        elif filter_below is not None:
+            print("filtering below")
+            data_df = data_df.loc[:, (data_df < filter_below).any()].copy(deep = True)
+
         for l in list:
             # filter and take relevant values from dataframe and add to list. Extract all values as a list of lists
-            mask = df['Distance (m)'] == Xcm_val
-            data_df = df[mask]
-            d = pd.Series(data_df[l])
-            d_name.append(d.name.split('_')[i])
-            d_val.append(d.values[0])
+            if l in data_df.columns.values:
+                print(l)
+                d = pd.Series(data_df[l])
+                d_name.append(d.name.split('_')[i])
+                print(d_name)
+                # print(d_name)
+                d_val.append(d.values[0])
         return d_val, d_name
 
     def plot_bar(self, col_val, col_label, colour, gas_to_add = None, offset = 0):
@@ -102,7 +121,7 @@ class Graph():
                          figure=self.fig)
             self.ax.legend()
 
-    def plot_bar_species(self, name_of_folder_n_sheet: str, gas_to_add: str, list_of_eq: list = None, multiplier: float = 1,
+    def plot_bar_species(self, name_of_folder_n_sheet: str, gas_to_add: str, list_of_eq: list = None, multiplier: float = 1, filter_above = None, filter_below= None,
                          colour: str = 'b', X: float = 0.02, offset: float = 0):
         """
         This function takes REACTION SENSITIVITY values from a spreadsheet at default distance X(cm) = 2.0 and plots them.
@@ -138,21 +157,24 @@ class Graph():
             list_col_h = self.find_col_headers(sens_df, full_eq_list_when_no_eq, gas_to_add)
 
         if list_col_h is not None:
-            col_val, col_label = self.find_col_values(sens_df, list_col_h, X)
+            col_val, col_label = self.find_col_values(sens_df, list_col_h, X, filter_above = filter_above, filter_below = filter_below)
 
 
             #if column does not exist in col label, assign value = 0 to it and add label:
-            for eq in list_of_eq_local:
-                if eq not in col_label:
-                    col_label.append(eq)
-                    col_val.append(0)
-            print('ok:')
-            print(col_val)
-            print(col_label)
-            col_val = [x * multiplier for x in col_val]
-            self.plot_bar(col_val, col_label, colour, gas_to_add, offset=offset)
+            if filter_below is None and filter_above is None:
+                for eq in list_of_eq_local:
+                    if eq not in col_label:
+                        col_label.append(eq)
+                        col_val.append(0)
 
-    def plot_bar_lam_burning_v(self, name_of_folder_n_sheet: str, list_of_eq=None, multiplier: float = 1,
+            col_val = [x * multiplier for x in col_val]
+
+            if col_val:
+                self.plot_bar(col_val, col_label, colour, gas_to_add, offset=offset)
+            else:
+                raise ValueError('Cannot find values')
+
+    def plot_bar_lam_burning_v(self, name_of_folder_n_sheet: str, list_of_eq=None, multiplier: float = 1, filter_above = None, filter_below= None,
                                colour: str = 'red', X: float = 0, offset: float = 0):
         '''
         this function takes LAMINAR BURNING VELOCITY SENSITIVITY and plots it on a bar chart at default distance = 0 cm.
@@ -185,16 +207,20 @@ class Graph():
 
         # find 'gas + equation' (from equation list) in column headers and add to list_col_h the true column headers:
         if list_col_h is not None:
-            col_val, col_label = self.find_col_values(sens_df, list_col_h, X, 3)
+            col_val, col_label = self.find_col_values(sens_df, list_col_h, X, 3, filter_above = filter_above, filter_below = filter_below)
 
             #if column does not exist in col label, assign value = 0 to it and add label:
-            for eq in list_of_eq_local:
-                if eq not in col_label:
-                    col_label.append(eq)
-                    col_val.append(0)
+            if filter_below is None and filter_above is None:
+                for eq in list_of_eq_local:
+                    if eq not in col_label:
+                        col_label.append(eq)
+                        col_val.append(0)
 
             col_val =  [x * multiplier for x in col_val]
-            self.plot_bar(col_val, col_label, colour, offset=offset)
+            if col_val:
+                self.plot_bar(col_val, col_label, colour, offset=offset)
+            else:
+                raise ValueError('Cannot find values')
 
 
     def show_and_save(self, path_of_save_folder: str, name: str):
