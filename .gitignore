@@ -11,6 +11,7 @@ __pycache__/
 ./idea
 build/
 bin/
+.DS_Store
 develop-eggs/
 dist/
 downloads/
