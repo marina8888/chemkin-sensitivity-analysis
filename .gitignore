@@ -9,6 +9,7 @@ __pycache__/
 # Distribution / packaging
 .Python
 ./idea
+idea/
 build/
 bin/
 .DS_Store
