@@ -137,3 +137,4 @@ dmypy.json
 src/mechanisms/*
 src/data/*
 src/output/*
+src/.DS_Store
