@@ -11,12 +11,13 @@ class Graph():
     def __init__(self, title: str, x_axis_label: str = 'Sensitivity', x_graph_size: int = 6,
                  y_graph_size: int = 6.5):
         """
-        Initialise a graph, based on object arguments. One figure is created per new graph object.
-        :param x_axis_label:
-        :param list_of_equations_considered:
-        :param title: the title that will be set for the graph
-        :param x_graph_size: default to almost square size 6 (increase number to change size ratio or increase resolution)
-        :param y_graph_size: and default to almost square size 6.5 (increase number to change size ratio or increase resolution)
+
+        Parameters
+        ----------
+        title : is the title of the graph
+        x_axis_label : x label
+        x_graph_size : width of graph with default value
+        y_graph_size : height of graph with default value
         """
         self.fig, self.ax = plt.subplots(figsize=(x_graph_size, y_graph_size))
 
@@ -124,9 +125,24 @@ class Graph():
     def plot_bar_species(self, name_of_folder_n_sheet: str, gas_to_add: str, list_of_eq: list = None, multiplier: float = 1, filter_above = None, filter_below= None,
                          colour: str = 'b', X: float = 0.02, offset: float = 0):
         """
-        This function takes REACTION SENSITIVITY values from a spreadsheet at default distance X(cm) = 2.0 and plots them.
+        This function takes REACTION SENSITIVITY values from a spreadsheet at default distance X = 0.02 and plots them.
         The  user can modify this distance to better describe the point at which gases were samples,
         (which is usually the end point of the combustor).
+        Parameters
+        ----------
+        name_of_folder_n_sheet : path to file
+        gas_to_add : select a gas of interest
+        list_of_eq : optional list of equations to plot (if not included, will find all equations in file)
+        multiplier : multiply all values by this constant
+        filter_above : plot only the data above this value
+        filter_below : plot only the data below this value
+        colour : colour of bars
+        X : X value frmo spreadsheet at which sensitivity should be measured
+        offset : offset for bars in order to create a grouped plot. This should increase in increments of bar width (currently at 0.15)
+
+        Returns None
+        -------
+
         """
         # convert data into df called sens_df:
         full_path = os.path.join(name_of_folder_n_sheet)
@@ -176,10 +192,23 @@ class Graph():
 
     def plot_bar_lam_burning_v(self, name_of_folder_n_sheet: str, list_of_eq=None, multiplier: float = 1, filter_above = None, filter_below= None,
                                colour: str = 'red', X: float = 0, offset: float = 0):
-        '''
-        this function takes LAMINAR BURNING VELOCITY SENSITIVITY and plots it on a bar chart at default distance = 0 cm.
-        The  user can modify this distance to better describe where the unburnt mixture flowrate should be taken.
-        '''
+        """
+        PLOT LAMINAR BURNING VELOCITY at distance X (default 0). Assume using Flowrate_sens columns frmo CHEMKIN spreadsheet.
+        Parameters
+        ----------
+        name_of_folder_n_sheet : path to file
+        list_of_eq : if added, will only plot these chemical equations (otherwise will plot all equations available in spreadsheet).
+        multiplier : multiply all sensitivity values by this constant
+        filter_above : take all values above this one
+        filter_below : take all values below this one
+        colour : bar colour
+        X : X distance
+        offset : for bar graph spacing
+
+        Returns None
+        -------
+
+        """
         # convert data into df called sens_df:
         full_path = os.path.join(name_of_folder_n_sheet)
         sens_df = pd.read_csv(full_path)
@@ -225,11 +254,15 @@ class Graph():
 
     def show_and_save(self, path_of_save_folder: str, name: str):
         """
-        shows and saves the figure - must be called to show the figure at the end of plotting
-        :param self:
-        :param path_of_save_folder: save figures to this folder
-        :param name: save figures under this name
-        :return:
+
+        Parameters
+        ----------
+        path_of_save_folder : where to save
+        name : name under which picture should be saved
+
+        Returns None
+        -------
+
         """
         full_path = os.path.join(path_of_save_folder, name)
         plt.savefig(full_path, dpi=300, bbox_inches="tight")

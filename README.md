@@ -23,17 +23,13 @@ To generate graphs your chemkin spreadsheets should be uploaded to a new folder 
 from spreadsheet import create_graphs
 
 def main():
-    # Create a new graph:
-    marina = create_graphs.Graph('Add My Title Here')
+    name_of_graph = create_graphs.Graph('Add My Title Here')
 
-    #Add laminar burning velocity plot using CHEMKIN generated export.csv spreadsheet:
-    marina.plot_bar_lam_burning_v('data/okafor_lam_sens/export.csv', filter_below = -0.02,filter_above = 0.02)
+    name_of_graph.plot_bar_lam_burning_v('./path/to/laminar/sheet.csv', filter_below = -0.02,filter_above = 0.02)
 
-    #Add species plots for NO and NO2, with an offset create grouped bars:
-    marina.plot_bar_species('./okafor_sens/Okafor_0.85_0.4sens.csv', 'NO', ['NH2+O<=>NH+OH', 'NH2+NO<=>NNH+OH','H+NO+M<=>HNO+M', 'HNO+H<=>H2+NO', 'H+O2<=>O+OH'], offset=0.15)
-    marina.plot_bar_species('./okafor_sens/Okafor_0.85_0.4sens.csv', 'NO2', ['NH2+O<=>NH+OH', 'NH2+NO<=>NNH+OH','H+NO+M<=>HNO+M', 'HNO+H<=>H2+NO', 'H+O2<=>O+OH'], colour = 'g', offset=0.3)
+    name_of_graph.plot_bar_species('./path/to/sheet.csv', 'NO', ['NH2+O<=>NH+OH', 'NH2+NO<=>NNH+OH','H+NO+M<=>HNO+M', 'HNO+H<=>H2+NO', 'H+O2<=>O+OH'], offset=0.15)
+    name_of_graph.plot_bar_species('./path/to/sheet.csv', 'NO2', ['NH2+O<=>NH+OH', 'NH2+NO<=>NNH+OH','H+NO+M<=>HNO+M', 'HNO+H<=>H2+NO', 'H+O2<=>O+OH'], colour = 'g', offset=0.3)
     
-    #Save graphs to ./output/graphs folder (which user may need to create) under the name test.png:
     marina.show_and_save('./output/graphs', 'test')
 
 if __name__ == "__main__":
@@ -44,30 +40,92 @@ if __name__ == "__main__":
 
 ![Sample code graph](src/website_images/test.png)
 
-Please note that the __distance X at which you need the sensitivities to be taken at should be included in the function arguments,__ and will be in the same units as the spreadsheet, as per description for plotting species sensitivities: 
+### Basic Usage:
+
+__Create a new graph object and give it a random name:__
 
 ```
-    def plot_bar_species(self, name_of_folder_n_sheet: str, gas_to_add: str, list_of_eq: list = None, multiplier: float = 1,
+random_name = create_graphs.Graph('My Graph', 'x label')
+```
+Following these options: 
+```
+class Graph():
+    def __init__(self, title: str, x_axis_label: str = 'Sensitivity', x_graph_size: int = 6,
+                 y_graph_size: int = 6.5):
+        """
+        
+        Parameters
+        ----------
+        title : is the title of the graph
+        x_axis_label : x label
+        x_graph_size : width of graph with default value
+        y_graph_size : height of graph with default value
+        """
+```
+__To create a new plot, call one of the following two functions on the graph object:__
+
+SPECIES PLOT: 
+```buildoutcfg
+    def plot_bar_species(self, name_of_folder_n_sheet: str, gas_to_add: str, list_of_eq: list = None, multiplier: float = 1, filter_above = None, filter_below= None,
                          colour: str = 'b', X: float = 0.02, offset: float = 0):
         """
-        This function takes REACTION SENSITIVITY values from a spreadsheet at default distance X(cm) = 2.0 and plots them.
+        This function takes REACTION SENSITIVITY values from a spreadsheet at default distance X = 0.02 and plots them.
         The  user can modify this distance to better describe the point at which gases were samples,
         (which is usually the end point of the combustor).
+        Parameters
+        ----------
+        name_of_folder_n_sheet : path to file
+        gas_to_add : select a gas of interest
+        list_of_eq : optional list of equations to plot (if not included, will find all equations in file)
+        multiplier : multiply all values by this constant
+        filter_above : plot only the data above this value
+        filter_below : plot only the data below this value 
+        colour : colour of bars
+        X : X value frmo spreadsheet at which sensitivity should be measured
+        offset : offset for bars in order to create a grouped plot. This should increase in increments of bar width (currently at 0.15)
+
+        Returns None
+        -------
+
         """
 ```
-A multiplier is available to scale up all values. If equations are not specified here, all equations pertinent the species of interest will be plotted. filter_above and filter_below are settings used for filtering data (above or below a certain value). Can use either one of the filters or both at the same time. 
 
+LAMINAR PLOT: 
 
-Assumes the use of laminar flame calculator module for calculating the laminar burning velocity sensitivity, which uses similar argument list: 
-```
-    def plot_bar_lam_burning_v(self, name_of_folder_n_sheet: str, list_of_eq=None, multiplier: float = 1,
+```    def plot_bar_lam_burning_v(self, name_of_folder_n_sheet: str, list_of_eq=None, multiplier: float = 1, filter_above = None, filter_below= None,
                                colour: str = 'red', X: float = 0, offset: float = 0):
-        '''
-        this function takes LAMINAR BURNING VELOCITY SENSITIVITY and plots it on a bar chart at default distance = 0 cm.
-        The  user can modify this distance to better describe where the unburnt mixture flowrate should be taken.
-        '''
-```
+        """
+        PLOT LAMINAR BURNING VELOCITY at distance X (default 0). Assume using Flowrate_sens columns frmo CHEMKIN spreadsheet.
+        Parameters
+        ----------
+        name_of_folder_n_sheet : path to file
+        list_of_eq : if added, will only plot these chemical equations (otherwise will plot all equations available in spreadsheet).
+        multiplier : multiply all sensitivity values by this constant
+        filter_above : take all values above this one
+        filter_below : take all values below this one
+        colour : bar colour
+        X : X distance
+        offset : for bar graph spacing
 
+        Returns None
+        -------
+
+        """
+```
+__Save all values__:
+```buildoutcfg
+    def show_and_save(self, path_of_save_folder: str, name: str):
+        """
+
+        Parameters
+        ----------
+        path_of_save_folder : where to save
+        name : name under which picture should be saved
+
+        Returns None
+        -------
+
+```
 ## src/spreadsheet/convert_rop_col.py file:
 WARNING - THIS SCRIPT IS HERE FOR REFERENCE ONLY. PLEASE PRE-PROCESS CHEMKIN CHEMISTRY IN THE GUI GENERATE WELL-FORMATED COLUMN HEADERS INSTEAD OF USING THIS SCRIPT. 
 
