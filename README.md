@@ -48,6 +48,7 @@ __Create a new graph object and give it a random name:__
 random_name = create_graphs.Graph('My Graph', 'x label')
 ```
 With details as below: 
+
 ```
 class Graph():
     def __init__(self, title: str, x_axis_label: str = 'Sensitivity', x_graph_size: int = 6,
@@ -62,6 +63,7 @@ class Graph():
         y_graph_size : height of graph with default value
         """
 ```
+
 __Then to create a new bar plot (or multiple plots on one graph), call one of the following two functions on your newly created graph object:__
 
 SPECIES PLOT: 
@@ -92,7 +94,8 @@ SPECIES PLOT:
 
 LAMINAR PLOT: 
 
-```    def plot_bar_lam_burning_v(self, name_of_folder_n_sheet: str, list_of_eq=None, multiplier: float = 1, filter_above = None, filter_below= None,
+```
+def plot_bar_lam_burning_v(self, name_of_folder_n_sheet: str, list_of_eq=None, multiplier: float = 1, filter_above = None, filter_below= None,
                                colour: str = 'red', X: float = 0, offset: float = 0):
         """
         PLOT LAMINAR BURNING VELOCITY at distance X (default 0). Assume using Flowrate_sens columns frmo CHEMKIN spreadsheet.
@@ -114,7 +117,7 @@ LAMINAR PLOT:
 ```
 __Save all values__:
 
-```buildoutcfg
+```
     def show_and_save(self, path_of_save_folder: str, name: str):
         """
 
@@ -127,6 +130,7 @@ __Save all values__:
         -------
 
 ```
+
 ## src/spreadsheet/convert_rop_col.py file:
 WARNING - THIS SCRIPT IS HERE FOR REFERENCE ONLY. PLEASE PRE-PROCESS CHEMKIN CHEMISTRY IN THE GUI GENERATE WELL-FORMATED COLUMN HEADERS INSTEAD OF USING THIS SCRIPT. 
 
