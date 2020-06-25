@@ -48,6 +48,7 @@ __Create a new graph object and give it a random name:__
 random_name = create_graphs.Graph('My Graph', 'x label')
 ```
 With details as below: 
+
 ```
 class Graph():
     def __init__(self, title: str, x_axis_label: str = 'Sensitivity', x_graph_size: int = 6,
@@ -62,6 +63,7 @@ class Graph():
         y_graph_size : height of graph with default value
         """
 ```
+
 __Then to create a new bar plot (or multiple plots on one graph), call one of the following two functions on your newly created graph object:__
 
 SPECIES PLOT: 
