@@ -19,10 +19,8 @@ class Graph():
         x_graph_size : width of graph with default value
         y_graph_size : height of graph with default value
         """
-        self.fig, self.ax = plt.subplots(figsize=(x_graph_size, y_graph_size))
-
         # get access to axies functions:
-
+        self.fig, self.ax = plt.subplots(figsize=(x_graph_size, y_graph_size))
 
         # set format variables and format the figure:
         plt.xlabel(x_axis_label)
@@ -54,6 +52,22 @@ class Graph():
             return filtered_eqs
 
     def find_col_values(self, df, list, Xcm_val, i : int = 2, filter_above = None, filter_below = None):
+        """
+        Find values based on input df and a list, such that a series of x and corresponding y values is filtered and generated.
+
+        Parameters
+        ----------
+        df
+        list
+        Xcm_val
+        i
+        filter_above
+        filter_below
+
+        Returns
+        -------
+
+        """
         d_name = []
         d_val = []
 
