@@ -2,7 +2,6 @@ import matplotlib.pyplot as plt
 import os
 import pandas as pd
 import numpy as np
-import copy
 
 
 # set a global style for all graphs:
@@ -91,7 +90,6 @@ class Graph():
             print('No values for equations that contain the gas provided!')
             return None
         else:
-            print(filtered_eqs)
             return (filtered_eqs, inital_eqs)
 
     def find_col_values(self, df, list, Xcm_val, i : int = 2, filter_above = None, filter_below = None):
@@ -136,8 +134,11 @@ class Graph():
             for s in data_df.columns.values:
                 if s.startswith(l):
                     d = pd.Series(data_df[s])
-                    d_name.append(d.name.split('_')[i])
-                    d_val.append(d.values[0])
+                    if d.name.split('_')[i] not in d_name:
+                        d_name.append(d.name.split('_')[i])
+                        d_val.append(d.values[0])
+                    else:
+                        print('ERROR : duplicate equation found and removed -> '+ s)
 
         return d_val, d_name
 
@@ -184,7 +185,7 @@ class Graph():
             self.ax.grid(b=True, which='minor', linestyle=':', linewidth='0.5', color='silver', zorder=0,
                          figure=self.fig)
 
-            self.ax.legend(loc = 'center right')
+            self.ax.legend()
 
     def plot_bar_species(self, path_to_sheet_or_df, gas_to_add: str, list_of_eq: list = None, multiplier: float = 1, filter_above = None, filter_below= None,
                          colour: str = 'b', X: float = 0.02, offset: float = 0, sorting = False):
@@ -236,6 +237,8 @@ class Graph():
                     if eq not in col_label:
                         col_label.append(eq)
                         col_val.append(0)
+
+            # check for copies:
 
             col_val = [x * multiplier for x in col_val]
 
