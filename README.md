@@ -23,14 +23,18 @@ To generate graphs your chemkin spreadsheets should be uploaded to a new folder 
 from spreadsheet import create_graphs
 
 def main():
-    name_of_graph = create_graphs.Graph('Add My Title Here')
+    df = prepare_sheet.add_distance('data/okafor_stag_sens/okafor_stag_0.85_0.4.csv', 0.02)
+    df_lam = prepare_sheet.add_distance('data/okafor_lam_sens/okafor_lam_0.85_0.4.csv', 0.02)
 
-    name_of_graph.plot_bar_lam_burning_v('./path/to/laminar/sheet.csv', filter_below = -0.02,filter_above = 0.02)
+    graph = create_graphs.Graph('40% Heat Ratio, 0.85 Equivalence Ratio')
 
-    name_of_graph.plot_bar_species('./path/to/sheet.csv', 'NO', ['NH2+O<=>NH+OH', 'NH2+NO<=>NNH+OH','H+NO+M<=>HNO+M', 'HNO+H<=>H2+NO', 'H+O2<=>O+OH'], offset=0.15)
-    name_of_graph.plot_bar_species('./path/to/sheet.csv', 'NO2', ['NH2+O<=>NH+OH', 'NH2+NO<=>NNH+OH','H+NO+M<=>HNO+M', 'HNO+H<=>H2+NO', 'H+O2<=>O+OH'], colour = 'g', offset=0.3)
-    
-    marina.show_and_save('./output/graphs', 'test')
+
+    NO_equations = graph.plot_bar_species(df, 'NO', X = 0.02, colour = 'g', filter_above=0.03, filter_below=-0.03, offset = 0.15, sorting = True)
+
+    graph.plot_bar_species(df, 'NH3', list_of_eq = NO_equations, X = 0.02, multiplier=0.5)
+    graph.plot_bar_lam_burning_v(df_lam, list_of_eq = NO_equations, X = 0,  offset = -0.15)
+
+    graph.show_and_save('./output/graphs', 'me')
 
 if __name__ == "__main__":
     main()
@@ -38,7 +42,7 @@ if __name__ == "__main__":
 
 ### Example graph (generated from sample code above):
 
-![Sample code graph](src/website_images/test.png)
+![Sample code graph](website_images/test.png)
 
 ### Basic Usage:
 
