@@ -117,7 +117,7 @@ class Graph():
             ind = np.arange(len(col_label))
 
             if gas_to_add is None:
-                self.ax.barh(ind+offset, col_val, bar_width, label='Sensitivity for laminar burning velocity', align='edge',
+                self.ax.barh(ind+offset, col_val, bar_width, label='Sensitivity for laminar' + '\n' + '   burning velocity', align='edge',
                              tick_label=col_label, zorder=10, color=colour)
 
             else:
@@ -140,7 +140,8 @@ class Graph():
                          figure=self.fig)
             self.ax.grid(b=True, which='minor', linestyle=':', linewidth='0.5', color='silver', zorder=0,
                          figure=self.fig)
-            self.ax.legend()
+
+            self.ax.legend(loc = 'center right')
 
     def plot_bar_species(self, path_to_sheet_or_df, gas_to_add: str, list_of_eq: list = None, multiplier: float = 1, filter_above = None, filter_below= None,
                          colour: str = 'b', X: float = 0.02, offset: float = 0, sorting = False):
