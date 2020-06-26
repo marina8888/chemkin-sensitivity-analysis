@@ -136,7 +136,7 @@ class Graph():
                          figure=self.fig)
             self.ax.legend()
 
-    def plot_bar_species(self, name_of_folder_n_sheet: str, gas_to_add: str, list_of_eq: list = None, multiplier: float = 1, filter_above = None, filter_below= None,
+    def plot_bar_species(self, path_to_sheet_or_df, gas_to_add: str, list_of_eq: list = None, multiplier: float = 1, filter_above = None, filter_below= None,
                          colour: str = 'b', X: float = 0.02, offset: float = 0):
         """
         This function takes REACTION SENSITIVITY values from a spreadsheet at default distance X = 0.02 and plots them.
@@ -144,7 +144,7 @@ class Graph():
         (which is usually the end point of the combustor).
         Parameters
         ----------
-        name_of_folder_n_sheet : path to file
+        path_to_sheet_or_df : path to file or df
         gas_to_add : select a gas of interest
         list_of_eq : optional list of equations to plot (if not included, will find all equations in file)
         multiplier : multiply all values by this constant
@@ -158,9 +158,15 @@ class Graph():
         -------
 
         """
-        # convert data into df called sens_df:
-        full_path = os.path.join(name_of_folder_n_sheet)
-        sens_df = pd.read_csv(full_path)
+        #initialise the main dataframe:
+        sens_df = pd.DataFrame()
+
+        # check input for filepath or dataframe:
+        if type(path_to_sheet_or_df) is pd.DataFrame:
+            sens_df = path_to_sheet_or_df
+
+        else:
+            sens_df = pd.read_csv(path_to_sheet_or_df)
 
         # initalise x axis labels and x axis values:
         list_col_h = []
@@ -204,13 +210,13 @@ class Graph():
             else:
                 raise ValueError('Cannot find values')
 
-    def plot_bar_lam_burning_v(self, name_of_folder_n_sheet: str, list_of_eq=None, multiplier: float = 1, filter_above = None, filter_below= None,
+    def plot_bar_lam_burning_v(self, path_to_sheet_or_df, list_of_eq=None, multiplier: float = 1, filter_above = None, filter_below= None,
                                colour: str = 'red', X: float = 0, offset: float = 0):
         """
         PLOT LAMINAR BURNING VELOCITY at distance X (default 0). Assume using Flowrate_sens columns frmo CHEMKIN spreadsheet.
         Parameters
         ----------
-        name_of_folder_n_sheet : path to file
+        path_to_sheet_or_df : path to file
         list_of_eq : if added, will only plot these chemical equations (otherwise will plot all equations available in spreadsheet).
         multiplier : multiply all sensitivity values by this constant
         filter_above : take all values above this one
@@ -223,9 +229,16 @@ class Graph():
         -------
 
         """
-        # convert data into df called sens_df:
-        full_path = os.path.join(name_of_folder_n_sheet)
-        sens_df = pd.read_csv(full_path)
+        # initialise the main dataframe:
+        sens_df = pd.DataFrame()
+
+        # check input for filepath or dataframe:
+        if type(path_to_sheet_or_df) is pd.DataFrame:
+            sens_df = path_to_sheet_or_df
+
+        else:
+            sens_df = pd.read_csv(path_to_sheet_or_df)
+
         # initalise x axis labels and x axis values:
         list_col_h = []
         col_val = []
