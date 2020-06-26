@@ -133,10 +133,16 @@ class Graph():
         for l in list:
             for s in data_df.columns.values:
                 if s.startswith(l):
+                    print(l)
+                    print(s)
                     d = pd.Series(data_df[s])
+                    print(d.values)
                     if d.name.split('_')[i] not in d_name:
                         d_name.append(d.name.split('_')[i])
-                        d_val.append(d.values[0])
+                        try:
+                            d_val.append(d.values[0])
+                        except IndexError:
+                            d_val.append(0)
                     else:
                         print('ERROR : duplicate equation found and removed -> '+ s)
 
