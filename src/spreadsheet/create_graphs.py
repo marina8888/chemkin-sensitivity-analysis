@@ -80,7 +80,7 @@ class Graph():
             data_df1 = data_df.loc[:,(data_df > filter_above).any()].copy(deep = True)
             data_df2 = data_df.loc[:,(data_df < filter_below).any()].copy(deep = True)
             data_df = data_df1.join([data_df2])
-            # data_df = data_df[(df > filter_above) & (df < filter_below)]
+
         elif filter_above is not None:
             print("filtering above")
             data_df = data_df.loc[:, (data_df > filter_above).any()].copy(deep = True)
@@ -94,7 +94,6 @@ class Graph():
             if l in data_df.columns.values:
                 d = pd.Series(data_df[l])
                 d_name.append(d.name.split('_')[i])
-                # print(d_name)
                 d_val.append(d.values[0])
 
         return d_val, d_name
@@ -110,11 +109,8 @@ class Graph():
                 col_label, col_val = zip(*sorted(zip(col_label, col_val)))
 
             elif sorting is True:
-                print(col_val)
-                print(col_label)
                 l = sorted(zip(col_label, col_val), key=lambda x: x[1])
                 col_label, col_val = zip(*l)
-                print(col_label)
 
 
             bar_width = 0.15
@@ -218,6 +214,7 @@ class Graph():
                 self.plot_bar(col_val, col_label, colour, gas_to_add, offset=offset, sorting = sorting)
             else:
                 raise ValueError('Cannot find values')
+        return col_label
 
     def plot_bar_lam_burning_v(self, path_to_sheet_or_df, list_of_eq=None, multiplier: float = 1, filter_above = None, filter_below= None,
                                colour: str = 'red', X: float = 0, offset: float = 0, sorting = False):
@@ -287,6 +284,8 @@ class Graph():
             else:
                 raise ValueError('Cannot find values')
 
+        print(col_label)
+        return col_label
 
     def show_and_save(self, path_of_save_folder: str, name: str):
         """
