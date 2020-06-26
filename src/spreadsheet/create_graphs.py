@@ -47,7 +47,7 @@ class Graph():
                 filtered_eqs += list(filter(lambda x: column_header in x, df.columns.values))
 
         if not filtered_eqs:
-            print('no values for equations that contain the gas provided:')
+            print('No values for equations that contain the gas provided!')
             return None
         else:
             return filtered_eqs
@@ -262,9 +262,9 @@ class Graph():
             full_eq_list_when_no_eq = []
             for s in sens_df.columns.values:
                 try:
-                    h = s.split('_')[2]
+                    h = s.split('_')[3]
                     if '=' in h and h not in full_eq_list_when_no_eq:
-                        full_eq_list_when_no_eq.append(s.split('_')[2])
+                        full_eq_list_when_no_eq.append(s.split('_')[3])
                 except IndexError:
                     print(s + ' not added to eq list because its not an equation')
             list_of_eq_local = full_eq_list_when_no_eq
