@@ -2,6 +2,7 @@ import matplotlib.pyplot as plt
 import os
 import pandas as pd
 import numpy as np
+import operator
 
 # set a global style for all graphs:
 plt.style.use('seaborn-notebook')
@@ -91,21 +92,30 @@ class Graph():
         for l in list:
             # filter and take relevant values from dataframe and add to list. Extract all values as a list of lists
             if l in data_df.columns.values:
-                print(l)
                 d = pd.Series(data_df[l])
                 d_name.append(d.name.split('_')[i])
-                print(d_name)
                 # print(d_name)
                 d_val.append(d.values[0])
+
         return d_val, d_name
 
-    def plot_bar(self, col_val, col_label, colour, gas_to_add = None, offset = 0):
+    def plot_bar(self, col_val, col_label, colour, gas_to_add = None, offset = 0, sorting = False):
         """
         Simple bar graph plot including setting ticks and correct axis locations.
         """
         if col_val is not None:
-            # sort in order for x labels to match:
-            col_label, col_val = zip(*sorted(zip(col_label, col_val)))
+
+            if sorting is False:
+                # sort in order for x labels to match:
+                col_label, col_val = zip(*sorted(zip(col_label, col_val)))
+
+            elif sorting is True:
+                print(col_val)
+                print(col_label)
+                l = sorted(zip(col_label, col_val), key=lambda x: x[1])
+                col_label, col_val = zip(*l)
+                print(col_label)
+
 
             bar_width = 0.15
             ind = np.arange(len(col_label))
@@ -137,7 +147,7 @@ class Graph():
             self.ax.legend()
 
     def plot_bar_species(self, path_to_sheet_or_df, gas_to_add: str, list_of_eq: list = None, multiplier: float = 1, filter_above = None, filter_below= None,
-                         colour: str = 'b', X: float = 0.02, offset: float = 0):
+                         colour: str = 'b', X: float = 0.02, offset: float = 0, sorting = False):
         """
         This function takes REACTION SENSITIVITY values from a spreadsheet at default distance X = 0.02 and plots them.
         The  user can modify this distance to better describe the point at which gases were samples,
@@ -195,7 +205,6 @@ class Graph():
         if list_col_h is not None:
             col_val, col_label = self.find_col_values(sens_df, list_col_h, X, filter_above = filter_above, filter_below = filter_below)
 
-
             #if column does not exist in col label, assign value = 0 to it and add label:
             if filter_below is None and filter_above is None:
                 for eq in list_of_eq_local:
@@ -206,12 +215,12 @@ class Graph():
             col_val = [x * multiplier for x in col_val]
 
             if col_val:
-                self.plot_bar(col_val, col_label, colour, gas_to_add, offset=offset)
+                self.plot_bar(col_val, col_label, colour, gas_to_add, offset=offset, sorting = sorting)
             else:
                 raise ValueError('Cannot find values')
 
     def plot_bar_lam_burning_v(self, path_to_sheet_or_df, list_of_eq=None, multiplier: float = 1, filter_above = None, filter_below= None,
-                               colour: str = 'red', X: float = 0, offset: float = 0):
+                               colour: str = 'red', X: float = 0, offset: float = 0, sorting = False):
         """
         PLOT LAMINAR BURNING VELOCITY at distance X (default 0). Assume using Flowrate_sens columns frmo CHEMKIN spreadsheet.
         Parameters
@@ -274,7 +283,7 @@ class Graph():
 
             col_val =  [x * multiplier for x in col_val]
             if col_val:
-                self.plot_bar(col_val, col_label, colour, offset=offset)
+                self.plot_bar(col_val, col_label, colour, offset=offset, sorting = sorting)
             else:
                 raise ValueError('Cannot find values')
 
