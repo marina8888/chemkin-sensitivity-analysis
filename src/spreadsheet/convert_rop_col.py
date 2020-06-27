@@ -28,7 +28,8 @@ class Spreadsheet():
                 df_list.append(sens_df)
         return df_list
 
-    def create_mech(self, mech_file):
+    @staticmethod
+    def create_mech(mech_file):
         """
         create a list of numbered equations from the mech file. Will be incorrect if chemkin does not read the same way.
         """
