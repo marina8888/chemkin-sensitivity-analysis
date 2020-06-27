@@ -16,7 +16,16 @@ class Spreadsheet():
     def create_pd(self, name_of_sensitivity_folder):
         """
         create list of dataframes from csv files
+
+        Parameters
+        ----------
+        name_of_sensitivity_folder
+
+        Returns
+        -------
+
         """
+
         df_list = []
         self.file_list = []
         path = os.path.join('data', name_of_sensitivity_folder)
@@ -32,7 +41,15 @@ class Spreadsheet():
     def create_mech(mech_file):
         """
         create a list of numbered equations from the mech file. Will be incorrect if chemkin does not read the same way.
+        Parameters
+        ----------
+        mech_file
+
+        Returns
+        -------
+
         """
+
         lines = []
         stripped_l = []
         full_path = os.path.join('mechanisms', mech_file)
