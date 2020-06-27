@@ -129,7 +129,7 @@ class Graph():
                             d_val.append(d.values[0])
                         except IndexError:
                             d_val.append(0)
-                            print("No value was found. Please check the X distance is specified correctly. ")
+                            print("ERROR: No value was found. Please check the X distance is specified correctly. ")
                     else:
                         print('ERROR : duplicate equation found and removed -> '+ s)
 
