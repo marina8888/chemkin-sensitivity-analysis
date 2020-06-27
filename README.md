@@ -22,7 +22,7 @@ Coming soon...
 
 ## Experienced Users
 
-Setup your platform for development in Python3 and clone repo from [!GitHub repo](https://github.com/marina8888/chemkin-sensitivity-analysis). Install requirements.txt file required libraries. 
+Setup your platform for development in Python3 and clone repo from the [GitHub repo](https://github.com/marina8888/chemkin-sensitivity-analysis). Install requirements.txt file required libraries. 
 
 ## Creating Sensitivity Graphs
 all code in __src/spreadsheet/create_graphs.py file__ and __src/spreadsheet/prepare_sheet.py file__.
