@@ -1,5 +1,7 @@
 # chemkin-sensitivity-analysis
 
+[![Codacy Badge](https://api.codacy.com/project/badge/Grade/b9cf8113c39c4c37a3100fee24257713)](https://app.codacy.com/manual/marina8888/chemkin-sensitivity-analysis?utm_source=github.com&utm_medium=referral&utm_content=marina8888/chemkin-sensitivity-analysis&utm_campaign=Badge_Grade_Dashboard)
+
 ## To Install Directory on macOS (New Users)
 1.Go to [macOS installation file](https://github.com/marina8888/chemkin-sensitivity-analysis/blob/master/install_files/macos_install.sh), click on the Raw button and right click Save As to save the installation script. Please save it in the directory where you want this project to be saved (e.g the Developer folder)
 
