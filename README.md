@@ -1,15 +1,15 @@
 # chemkin-sensitivity-analysis
 
-## To Install on macOS:
-1. Go to [macOS installation file](https://github.com/marina8888/chemkin-sensitivity-analysis/blob/master/install_files/macos_install.sh), click on the Raw button and right click Save As to save the installation script. Please save it in the directory where you want this project to be saved (e.g the Developer folder)
-2. Go to terminal and type `cd path/to/where/your/installation/script/is/saved` to go to the directory with the installation script
-3. Once in this directory, type `./install_mac.sh` to install the project and its dependencies 
-4. Once the installation in complete, enter the folder by typing: `cd command-line-chemkin`
-5. Activate your python environment by typing: `cd source bin/activate`
-6. You can now launch the project from your text editor of choice (pycharm, Atom, Sublime text etc.) src is the root directory.
-7. Please type any instruction commands in src/main.py. Please see the sample code section for more details.
+## To Install on macOS (New Users)
+1.  Go to [macOS installation file](https://github.com/marina8888/chemkin-sensitivity-analysis/blob/master/install_files/macos_install.sh), click on the Raw button and right click Save As to save the installation script. Please save it in the directory where you want this project to be saved (e.g the Developer folder)
+2.  Go to terminal and type `cd path/to/where/your/installation/script/is/saved` to go to the directory with the installation script
+3.  Once in this directory, type `./install_mac.sh` to install the project and its dependencies 
+4.  Once the installation in complete, enter the folder by typing: `cd command-line-chemkin`
+5.  Activate your python environment by typing: `cd source bin/activate`
+6.  You can now launch the project from your text editor of choice (pycharm, Atom, Sublime text etc.) src is the root directory.
+7.Please type any instruction commands in src/main.py. Please see the sample code section for more details.
 
-## To Install on Windows:
+## To Install on Windows (New Users)
 Coming soon...
 
 
@@ -17,7 +17,7 @@ Coming soon...
 Uses matplotlib library to plot sensitivity data as bar charts. Sensitivity data must be saved in .csv file using the format CHEMKIN postprocessing tool uses to save data to spreadsheet.
 
 
-### Sample code: 
+### Sample code
 To generate graphs your chemkin spreadsheets should be uploaded to a new folder in the src folder. To plot, a graph object must be created in src/main.py, where graph_object.plot_bar_ functions can be used to plot the sensitivities as follows:
 ```
 from spreadsheet import create_graphs
@@ -40,7 +40,7 @@ if __name__ == "__main__":
     main()
 ```
 
-### Example graph (generated from sample code above):
+### Example graph (generated from sample code above)
 
 ![Sample code graph](website_images/test.png)
 
@@ -135,7 +135,7 @@ __Save all values__:
 
 ```
 
-## src/spreadsheet/convert_rop_col.py file:
+## src/spreadsheet/convert_rop_col.py file
 WARNING - THIS SCRIPT IS HERE FOR REFERENCE ONLY. PLEASE PRE-PROCESS CHEMKIN CHEMISTRY IN THE GUI GENERATE WELL-FORMATED COLUMN HEADERS INSTEAD OF USING THIS SCRIPT. 
 
 This script finds csv file column headers named in the format: `<GAS>_ROP_GasRxn#<number> (mole/cm3-sec)`, where <GAS> is the sensitivity of a considered gas, ROP stands for rate of production, and <number> is a reaction number from a mechanism. 
