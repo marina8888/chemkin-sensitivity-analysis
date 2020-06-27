@@ -27,17 +27,6 @@ class Graph():
         plt.xlabel(x_axis_label)
         plt.title(title, pad=15, figure=self.fig)
 
-    # full_eq_list_when_no_eq = []
-    # for s in sens_df.columns.values:
-    #     try:
-    #         h = s.split('_')[2]
-    #         if '=' in h and h not in full_eq_list_when_no_eq:
-    #             full_eq_list_when_no_eq.append(s.split('_')[2])
-    #     except IndexError:
-    #         print(s + ' not added to eq list because its not an equation')
-    # list_of_eq_local = full_eq_list_when_no_eq
-    # list_col_h = self.find_col_headers(sens_df, full_eq_list_when_no_eq, gas_to_add)
-
     def find_col_headers(self, df, eq_list=None, gas=None):
         '''
         find 'gas + equation' (from equation list) in column headers and add to list_val the true column headers:
@@ -133,16 +122,14 @@ class Graph():
         for l in list:
             for s in data_df.columns.values:
                 if s.startswith(l):
-                    print(l)
-                    print(s)
                     d = pd.Series(data_df[s])
-                    print(d.values)
                     if d.name.split('_')[i] not in d_name:
                         d_name.append(d.name.split('_')[i])
                         try:
                             d_val.append(d.values[0])
                         except IndexError:
                             d_val.append(0)
+                            print("No value was found. Please check the X distance is specified correctly. ")
                     else:
                         print('ERROR : duplicate equation found and removed -> '+ s)
 
@@ -208,8 +195,9 @@ class Graph():
         filter_above : plot only the data above this value
         filter_below : plot only the data below this value
         colour : colour of bars
-        X : X value frmo spreadsheet at which sensitivity should be measured
+        X : X value from spreadsheet at which sensitivity should be measured
         offset : offset for bars in order to create a grouped plot. This should increase in increments of bar width (currently at 0.15)
+        sorting : if True, sorts the data in order for plotting
 
         Returns None
         -------
@@ -268,6 +256,7 @@ class Graph():
         colour : bar colour
         X : X distance
         offset : for bar graph spacing
+        sorting : if True, sorts the data in order for plotting
 
         Returns None
         -------
