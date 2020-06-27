@@ -13,7 +13,8 @@
 Coming soon...
 
 
-## src/spreadsheet/create_graphs.py file:
+## Creating Sensitivity Graphs
+all code in __src/spreadsheet/create_graphs.py file__ and __src/spreadsheet/prepare_sheet.py file__.
 Uses matplotlib library to plot sensitivity data as bar charts. Sensitivity data must be saved in .csv file using the format CHEMKIN postprocessing tool uses to save data to spreadsheet.
 
 
@@ -135,9 +136,9 @@ __Save all values__:
 
 ```
 
-## src/spreadsheet/convert_rop_col.py file
+## Numbering Equations From GasRxn Numbers
 WARNING - THIS SCRIPT IS HERE FOR REFERENCE ONLY. PLEASE PRE-PROCESS CHEMKIN CHEMISTRY IN THE GUI GENERATE WELL-FORMATED COLUMN HEADERS INSTEAD OF USING THIS SCRIPT. 
-
+All code in __src/spreadsheet/convert_rop_col.py file__.
 This script finds csv file column headers named in the format: `<GAS>_ROP_GasRxn#<number> (mole/cm3-sec)`, where <GAS> is the sensitivity of a considered gas, ROP stands for rate of production, and <number> is a reaction number from a mechanism. 
   It proceeds to rename the column headers with the relevant equations from the mechanisms, e.g: 
   ` CH4_ROP_H+HCO(+M)<=>CH2O(+M)`
