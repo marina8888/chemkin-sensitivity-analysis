@@ -216,7 +216,7 @@ class Graph():
         sens_df = pd.DataFrame()
 
         # check input for filepath or dataframe:
-        if type(path_to_sheet_or_df) is pd.DataFrame:
+        if isinstance(path_to_sheet_or_df, pd.DataFrame):
             sens_df = path_to_sheet_or_df
 
         else:
@@ -276,7 +276,7 @@ class Graph():
         sens_df = pd.DataFrame()
 
         # check input for filepath or dataframe:
-        if type(path_to_sheet_or_df) is pd.DataFrame:
+        if isinstance(path_to_sheet_or_df, pd.DataFrame):
             sens_df = path_to_sheet_or_df
 
         else:
