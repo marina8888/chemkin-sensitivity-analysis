@@ -1,7 +1,5 @@
 import pandas as pd
 import os
-import openpyxl
-
 
 class Spreadsheet():
     def __init__(self, name_of_sensitivity_folder: str, name_of_mech_file):
