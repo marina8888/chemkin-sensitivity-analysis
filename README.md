@@ -20,6 +20,10 @@
 ## To Install Directory on Windows (New Users)
 Coming soon...
 
+## Experienced Users
+
+Setup your platform for development in Python3 and clone repo from https://github.com/marina8888/chemkin-sensitivity-analysis. Install requirements.txt file required libraries. 
+
 ## Creating Sensitivity Graphs
 all code in __src/spreadsheet/create_graphs.py file__ and __src/spreadsheet/prepare_sheet.py file__.
 Uses matplotlib library to plot sensitivity data as bar charts. Sensitivity data must be saved in .csv file using the format CHEMKIN postprocessing tool uses to save data to spreadsheet.
