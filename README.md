@@ -19,9 +19,10 @@
 
 ## To Install Directory on Windows (New Users)
 
-1. Install Python3 using the web-based installer from Windows 64 or 32x86 web-based installer: [install python] (https://www.python.org/downloads/release/python-383/). During the installation process tick "Add Python 3.x to PATH " and press "Install Now".
+1. Install Python3 using the web-based installer from Windows 64 or 32x86 web-based installer: [install python](https://www.python.org/downloads/release/python-383/). During the installation process tick "Add Python 3.x to PATH " and press "Install Now".
 
-2. Configure python to your path (if it is not already configured): [path configuration guide] (https://projects.raspberrypi.org/en/projects/using-pip-on-windows/4)
+2. Configure python to your path (if it is not already configured): 
+[path configuration guide](https://projects.raspberrypi.org/en/projects/using-pip-on-windows/4)
 
 3. In your cmd, get python to install pip by typing: `python -m pip install -U pip`, and then upgrade to the latest version of pip by typing  `python -m pip install –upgrade pip`. Your computer is now configured for python programming. 
 
