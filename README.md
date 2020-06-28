@@ -19,25 +19,25 @@
 
 ## To Install Directory on Windows (New Users)
 
-1. Install Python3 using the web-based installer from Windows 64 or 32x86 web-based installer: [install python](https://www.python.org/downloads/release/python-383/). During the installation process tick "Add Python 3.x to PATH " and press "Install Now".
+1.Install Python3 using the web-based installer from Windows 64 or 32x86 web-based installer: [install python](https://www.python.org/downloads/release/python-383/). During the installation process tick "Add Python 3.x to PATH " and press "Install Now".
 
-2. Configure python to your path (if it is not already configured): 
+2.Configure python to your path (if it is not already configured): 
 [path configuration guide](https://projects.raspberrypi.org/en/projects/using-pip-on-windows/4)
 
-3. In your cmd, get python to install pip by typing: `python -m pip install -U pip`, and then upgrade to the latest version of pip by typing  `python -m pip install –upgrade pip`. Your computer is now configured for python programming. 
+3.In your cmd, get python to install pip by typing: `python -m pip install -U pip`, and then upgrade to the latest version of pip by typing  `python -m pip install –upgrade pip`. Your computer is now configured for python programming. 
 
-4. Install a python friendly text editor, for example PyCharm (community) is recommended: [download PyCharm](https://www.jetbrains.com/pycharm/download/#section=mac)
+4.Install a python friendly text editor, for example PyCharm (community) is recommended: [download PyCharm](https://www.jetbrains.com/pycharm/download/#section=mac)
 
-5. To work with the GitHub command line download Git Bash: [download Git Bash](https://gitforwindows.org/)
+5.To work with the GitHub command line download Git Bash: [download Git Bash](https://gitforwindows.org/)
 
-6. If required, make a folder where you want to store the project. Open the just installed Git BASH and type `cd path/to/folder` then type `git clone https://github.com/marina8888/chemkin-sensitivity-analysis.git` to clone the repo to your computer. 
+6.If required, make a folder where you want to store the project. Open the just installed Git BASH and type `cd path/to/folder` then type `git clone https://github.com/marina8888/chemkin-sensitivity-analysis.git` to clone the repo to your computer. 
 
-7. Use your text editor to set up and environment, configuration and libraries from requirements.txt folder are installed. Find the install the required packages heading: 
+7.Use your text editor to set up and environment, configuration and libraries from requirements.txt folder are installed. Find the install the required packages heading: 
 [PyCharm initial configuration](https://www.jetbrains.com/help/pycharm/creating-and-running-your-first-python-project.html) and [install the required packages](https://www.jetbrains.com/help/pycharm/managing-dependencies.html)
 
-8. Select 'Mark directory as Sources Root' on the src folder: [Mark directory as sources root](https://www.jetbrains.com/help/pycharm/configuring-folders-within-a-content-root.html#unmark)
+8.Select 'Mark directory as Sources Root' on the src folder: [Mark directory as sources root](https://www.jetbrains.com/help/pycharm/configuring-folders-within-a-content-root.html#unmark)
 
-9. Modify the src/main.py file as per the sample code and press run. 
+9.Modify the src/main.py file as per the sample code and press run. 
 
 ## Experienced Users
 
