@@ -1,5 +1,7 @@
 # chemkin-sensitivity-analysis
 
+[![Codacy Badge](https://api.codacy.com/project/badge/Grade/b9cf8113c39c4c37a3100fee24257713)](https://app.codacy.com/manual/marina8888/chemkin-sensitivity-analysis?utm_source=github.com&utm_medium=referral&utm_content=marina8888/chemkin-sensitivity-analysis&utm_campaign=Badge_Grade_Dashboard)
+
 ## To Install Directory on macOS (New Users)
 1.Go to [macOS installation file](https://github.com/marina8888/chemkin-sensitivity-analysis/blob/master/install_files/macos_install.sh), click on the Raw button and right click Save As to save the installation script. Please save it in the directory where you want this project to be saved (e.g the Developer folder)
 
@@ -16,7 +18,30 @@
 7.Please type any instruction commands in src/main.py. Please see the sample code section for more details.
 
 ## To Install Directory on Windows (New Users)
-Coming soon...
+
+1.Install Python3 using the web-based installer from Windows 64 or 32x86 web-based installer: [install python](https://www.python.org/downloads/release/python-383/). During the installation process tick "Add Python 3.x to PATH " and press "Install Now".
+
+2.Configure python to your path (if it is not already configured): 
+[path configuration guide](https://projects.raspberrypi.org/en/projects/using-pip-on-windows/4)
+
+3.In your cmd, get python to install pip by typing: `python -m pip install -U pip`, and then upgrade to the latest version of pip by typing  `python -m pip install –upgrade pip`. Your computer is now configured for python programming. 
+
+4.Install a python friendly text editor, for example PyCharm (community) is recommended: [download PyCharm](https://www.jetbrains.com/pycharm/download/#section=mac)
+
+5.To work with the GitHub command line download Git Bash: [download Git Bash](https://gitforwindows.org/)
+
+6.If required, make a folder where you want to store the project. Open the just installed Git BASH and type `cd path/to/folder` then type `git clone https://github.com/marina8888/chemkin-sensitivity-analysis.git` to clone the repo to your computer. 
+
+7.Use your text editor to set up and environment, configuration and libraries from requirements.txt folder are installed. Find the install the required packages heading: 
+[PyCharm initial configuration](https://www.jetbrains.com/help/pycharm/creating-and-running-your-first-python-project.html) and [install the required packages](https://www.jetbrains.com/help/pycharm/managing-dependencies.html)
+
+8.Select 'Mark directory as Sources Root' on the src folder: [Mark directory as sources root](https://www.jetbrains.com/help/pycharm/configuring-folders-within-a-content-root.html#unmark)
+
+9.Modify the src/main.py file as per the sample code and press run. 
+
+## Experienced Users
+
+Setup your platform for development in Python3 and clone repo from the [GitHub repo](https://github.com/marina8888/chemkin-sensitivity-analysis). Install requirements.txt file for the required libraries. 
 
 ## Creating Sensitivity Graphs
 all code in __src/spreadsheet/create_graphs.py file__ and __src/spreadsheet/prepare_sheet.py file__.
