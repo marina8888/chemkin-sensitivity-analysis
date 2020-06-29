@@ -48,5 +48,20 @@ def join_files(path_to_folder):
     return sens_df
 
 def add_space(df):
-    df.columns = df.columns.str.lstrip()
-    return df
+    """
+    Add space to all columns. Required when export is done from task bar instead of analysis window.
+    Parameters
+    ----------
+    df
+
+    Returns
+    -------
+
+    """
+    if isinstance(df, str):
+        new_df = pd.read_csv(df)
+    else:
+        new_df = df
+    new_df.columns = df.columns.str.lstrip()
+
+    return new_df

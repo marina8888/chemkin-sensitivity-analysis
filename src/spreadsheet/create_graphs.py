@@ -109,7 +109,7 @@ class Graph():
         d_name = []
         d_val = []
 
-        mask1 = df['Distance_(cm)'] == Xcm_val
+        mask1 = df['Distance (m)'] == Xcm_val
         data_df = df[mask1].copy(deep=True)
 
         # add filter condition to df:
