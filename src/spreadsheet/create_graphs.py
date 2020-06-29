@@ -126,6 +126,7 @@ class Graph():
             print("filtering below")
             data_df = data_df.loc[:, (data_df < filter_below).any()].copy(deep=True)
 
+
         # filter and take relevant values from dataframe and add to list. Extract all values as a list of lists
         for l in list:
             for s in data_df.columns.values:
@@ -195,8 +196,6 @@ class Graph():
                     if eq not in col_label:
                         col_label.append(eq)
                         col_val.append(0)
-
-            # check for copies:
 
             col_val = [x * multiplier for x in col_val]
 
