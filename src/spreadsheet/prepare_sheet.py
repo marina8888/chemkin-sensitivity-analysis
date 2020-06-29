@@ -16,8 +16,7 @@ def add_distance(path_to_sheet, total_distance):
     """
 
     # convert data into df called sens_df:
-    tfr = pd.read_csv(path_to_sheet, chunksize=100000, iterator=True)
-    sens_df = pd.concat(tfr, ignore_index=True)
+    sens_df = pd.read_csv(path_to_sheet)
     sens_df['Distance (m)'] = None
     total_index = len(sens_df.index)
     for row in range(0, total_index, 1):
@@ -47,3 +46,7 @@ def join_files(path_to_folder):
 
     # returns a dataframe of all sheets joined together, which can be used as input for plotting functions:
     return sens_df
+
+def add_space(df):
+    df.columns = df.columns.str.lstrip()
+    return df

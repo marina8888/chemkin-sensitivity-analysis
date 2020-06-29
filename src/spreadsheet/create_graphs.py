@@ -109,7 +109,7 @@ class Graph():
         d_name = []
         d_val = []
 
-        mask1 = df['Distance (m)'] == Xcm_val
+        mask1 = df['Distance_(cm)'] == Xcm_val
         data_df = df[mask1].copy(deep=True)
 
         # add filter condition to df:
@@ -142,51 +142,6 @@ class Graph():
                         print('ERROR : duplicate equation found and removed -> ' + s)
 
         return d_val, d_name
-
-    def plot_bar(self, col_val, col_label, colour, gas_to_add=None, offset=0, sorting=False):
-        """
-        Simple bar graph plot including setting ticks and correct axis locations.
-        """
-        if col_val is not None:
-
-            if sorting is False:
-                # sort in order for x labels to match:
-                col_label, col_val = zip(*sorted(zip(col_label, col_val)))
-
-            elif sorting is True:
-                l = sorted(zip(col_label, col_val), key=lambda x: x[1])
-                col_label, col_val = zip(*l)
-
-            bar_width = 0.15
-            ind = np.arange(len(col_label))
-
-            if gas_to_add is None:
-                self.ax.barh(ind + offset, col_val, bar_width,
-                             label='Sensitivity for laminar' + '\n' + '   burning velocity', align='edge',
-                             tick_label=col_label, zorder=10, color=colour)
-
-            else:
-                self.ax.barh(ind + offset, col_val, bar_width, label='Sensitivity for ' + gas_to_add, align='edge',
-                             tick_label=col_label, zorder=10, color=colour)
-            # Move left y-axis and bottim x-axis to centre, passing through (0,0)
-            self.ax.spines['left'].set_position('zero')
-            self.ax.spines['bottom'].set_position('zero')
-
-            # Eliminate upper and right axes
-            self.ax.spines['right'].set_color('none')
-            self.ax.spines['top'].set_color('none')
-
-            # Show ticks in the left and lower axes only
-            self.ax.xaxis.set_ticks_position('bottom')
-            self.ax.yaxis.set_ticks_position('right')
-
-            # Set ticks:
-            self.ax.grid(b=True, which='major', linestyle='-', linewidth='1.0', color='gainsboro', zorder=0,
-                         figure=self.fig)
-            self.ax.grid(b=True, which='minor', linestyle=':', linewidth='0.5', color='silver', zorder=0,
-                         figure=self.fig)
-
-            self.ax.legend()
 
     def plot_bar_species(self, path_to_sheet_or_df, gas_to_add: str, list_of_eq: list = None, multiplier: float = 1,
                          filter_above=None, filter_below=None,
@@ -308,6 +263,52 @@ class Graph():
                 raise ValueError('Cannot find values')
 
         return col_label
+
+
+    def plot_bar(self, col_val, col_label, colour, gas_to_add=None, offset=0, sorting=False):
+        """
+        Simple bar graph plot including setting ticks and correct axis locations.
+        """
+        if col_val is not None:
+
+            if sorting is False:
+                # sort in order for x labels to match:
+                col_label, col_val = zip(*sorted(zip(col_label, col_val)))
+
+            elif sorting is True:
+                l = sorted(zip(col_label, col_val), key=lambda x: x[1])
+                col_label, col_val = zip(*l)
+
+            bar_width = 0.15
+            ind = np.arange(len(col_label))
+
+            if gas_to_add is None:
+                self.ax.barh(ind + offset, col_val, bar_width,
+                             label='Sensitivity for laminar' + '\n' + '   burning velocity', align='edge',
+                             tick_label=col_label, zorder=10, color=colour)
+
+            else:
+                self.ax.barh(ind + offset, col_val, bar_width, label='Sensitivity for ' + gas_to_add, align='edge',
+                             tick_label=col_label, zorder=10, color=colour)
+            # Move left y-axis and bottim x-axis to centre, passing through (0,0)
+            self.ax.spines['left'].set_position('zero')
+            self.ax.spines['bottom'].set_position('zero')
+
+            # Eliminate upper and right axes
+            self.ax.spines['right'].set_color('none')
+            self.ax.spines['top'].set_color('none')
+
+            # Show ticks in the left and lower axes only
+            self.ax.xaxis.set_ticks_position('bottom')
+            self.ax.yaxis.set_ticks_position('right')
+
+            # Set ticks:
+            self.ax.grid(b=True, which='major', linestyle='-', linewidth='1.0', color='gainsboro', zorder=0,
+                         figure=self.fig)
+            self.ax.grid(b=True, which='minor', linestyle=':', linewidth='0.5', color='silver', zorder=0,
+                         figure=self.fig)
+
+            self.ax.legend(bbox_to_anchor = (0.3,0.3))
 
     def show_and_save(self, path_of_save_folder: str, name: str):
         """
