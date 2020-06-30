@@ -8,8 +8,8 @@ plt.style.use('seaborn-notebook')
 
 
 class Graph():
-    def __init__(self, title: str, x_axis_label: str = 'Sensitivity', x_graph_size: int = 6,
-                 y_graph_size: int = 6.5):
+    def __init__(self, title: object, x_axis_label: object = 'Sensitivity', x_graph_size: object = 6,
+                 y_graph_size: object = 6.5) -> object:
         """
 
         Parameters
