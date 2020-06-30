@@ -200,7 +200,7 @@ class Graph():
             col_val = [x * multiplier for x in col_val]
 
             if col_val:
-                self.plot_bar(col_val, col_label, colour, gas_to_add, offset=offset, sorting=sorting)
+                self.plot_bar(col_val, col_label, colour, gas_to_add, offset=offset, sorting=sorting, list_of_eq = list_of_eq)
             else:
                 raise ValueError('Cannot find values')
         return col_label
@@ -257,38 +257,48 @@ class Graph():
 
             col_val = [x * multiplier for x in col_val]
             if col_val:
-                self.plot_bar(col_val, col_label, colour, offset=offset, sorting=sorting)
+                col_label, col_val = self.plot_bar(col_val, col_label, colour, offset=offset, sorting=sorting, list_of_eq = list_of_eq)
             else:
                 raise ValueError('Cannot find values')
 
         return col_label
 
 
-    def plot_bar(self, col_val, col_label, colour, gas_to_add=None, offset=0, sorting=False):
+    def plot_bar(self, col_val, col_label, colour, gas_to_add=None, offset=0, sorting=False, list_of_eq = None):
         """
         Simple bar graph plot including setting ticks and correct axis locations.
         """
+        col_val_loc = col_val
+        col_label_loc = col_label
         if col_val is not None:
 
-            if sorting is False:
+            if sorting is False and list_of_eq is None:
                 # sort in order for x labels to match:
-                col_label, col_val = zip(*sorted(zip(col_label, col_val)))
+                col_label_loc, col_val_loc = zip(*sorted(zip(col_label, col_val)))
+
+            elif sorting is False and list_of_eq is not None:
+                print(col_val)
+                print(col_label)
+                slt = sorted(zip(col_label,col_val), key=lambda t:list_of_eq.index(t[0]))
+                col_label_loc, col_val_loc = zip(*slt)
+                print(col_label_loc)
+                print(col_val_loc)
 
             elif sorting is True:
                 l = sorted(zip(col_label, col_val), key=lambda x: x[1])
-                col_label, col_val = zip(*l)
+                col_label_loc, col_val_loc = zip(*l)
 
             bar_width = 0.15
-            ind = np.arange(len(col_label))
+            ind = np.arange(len(col_label_loc))
 
             if gas_to_add is None:
-                self.ax.barh(ind + offset, col_val, bar_width,
+                self.ax.barh(ind + offset, col_val_loc, bar_width,
                              label='Sensitivity for laminar' + '\n' + '   burning velocity', align='edge',
-                             tick_label=col_label, zorder=10, color=colour)
+                             tick_label=col_label_loc, zorder=10, color=colour)
 
             else:
-                self.ax.barh(ind + offset, col_val, bar_width, label='Sensitivity for ' + gas_to_add, align='edge',
-                             tick_label=col_label, zorder=10, color=colour)
+                self.ax.barh(ind + offset, col_val_loc, bar_width, label='Sensitivity for ' + gas_to_add, align='edge',
+                             tick_label=col_label_loc, zorder=10, color=colour)
             # Move left y-axis and bottim x-axis to centre, passing through (0,0)
             self.ax.spines['left'].set_position('zero')
             self.ax.spines['bottom'].set_position('zero')
@@ -308,6 +318,7 @@ class Graph():
                          figure=self.fig)
 
             self.ax.legend(bbox_to_anchor = (0.3,0.3))
+            return col_label_loc, col_val_loc
 
     def show_and_save(self, path_of_save_folder: str, name: str):
         """
