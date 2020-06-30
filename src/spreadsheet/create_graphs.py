@@ -109,9 +109,10 @@ class Graph():
         d_name = []
         d_val = []
 
-        mask1 = df['Distance (m)'] == Xcm_val
+        mask1 = df['Distance_(cm)'] == Xcm_val
         data_df = df[mask1].copy(deep=True)
-
+        if data_df.empty:
+            raise ValueError('cannot find X value!')
         # add filter condition to df:
         if filter_above is not None and filter_below is not None:
             data_df1 = data_df.loc[:, (data_df > filter_above).any()].copy(deep=True)
@@ -277,12 +278,9 @@ class Graph():
                 col_label_loc, col_val_loc = zip(*sorted(zip(col_label, col_val)))
 
             elif sorting is False and list_of_eq is not None:
-                print(col_val)
-                print(col_label)
                 slt = sorted(zip(col_label,col_val), key=lambda t:list_of_eq.index(t[0]))
                 col_label_loc, col_val_loc = zip(*slt)
-                print(col_label_loc)
-                print(col_val_loc)
+
 
             elif sorting is True:
                 l = sorted(zip(col_label, col_val), key=lambda x: x[1])

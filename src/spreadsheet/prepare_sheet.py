@@ -44,21 +44,23 @@ def join_files(path_to_folder):
     sens_df = pd.DataFrame()
     list=[]
 
+    # check file ends in csv and not empty:
     for file in os.listdir(path_to_folder):
         if file.endswith(".csv"):
-            list.append(os.path.join(path_to_folder, file))
-    print(list)
+            path = os.path.join(path_to_folder, file)
+            filesize = os.path.getsize(path)
+            if filesize is not 0:
+                list.append(os.path.join(path_to_folder, file))
 
     sens_df = pd.read_csv(list[0])
-
-    for i in range(1,len(list)+1,1):
+    for i in range(1,len(list),1):
         temp = pd.read_csv(list[i])
-        sens_df = sens_df.join(temp)
+        sens_df = sens_df.merge(temp)
 
     # returns a dataframe of all sheets joined together, which can be used as input for plotting functions:
     return sens_df
 
-def add_space(df):
+def remove_spaces(df):
     """
     Add space to all columns. Required when export is done from task bar instead of analysis window.
     Parameters
