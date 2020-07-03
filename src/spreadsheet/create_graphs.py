@@ -164,13 +164,13 @@ class Graph():
         X : X value from spreadsheet at which sensitivity should be measured
         offset : offset for bars in order to create a grouped plot. This should increase in increments of bar width (currently at 0.15)
         sorting : if True, sorts the data in order for plotting
-
+        legend: custom legend added by user
         Returns None
         -------
 
         """
-        # initialise the main dataframe:
-        sens_df = pd.DataFrame()
+
+
 
         # check input for filepath or dataframe:
         if isinstance(path_to_sheet_or_df, pd.DataFrame):
@@ -186,7 +186,7 @@ class Graph():
 
         # find 'gas + equation' (from equation list) in column headers and add to list_col_h the true column headers:
         (list_col_h, equation_list) = self.find_col_headers(sens_df, list_of_eq, gas_to_add)
-
+        print(sens_df['NO_Sens_H+O2<=>O+OH'])
         if list_col_h is not None:
             col_val, col_label = self.find_col_values(sens_df, list_col_h, i=2, Xcm_val=X, filter_above=filter_above,
                                                       filter_below=filter_below)
@@ -201,7 +201,7 @@ class Graph():
             col_val = [x * multiplier for x in col_val]
 
             if col_val:
-                self.plot_bar(col_val, col_label, colour, gas_to_add, offset=offset, sorting=sorting, list_of_eq = list_of_eq, legend = legend)
+                col_label, col_val = self.plot_bar(col_val, col_label, colour, gas_to_add, offset=offset, sorting=sorting, list_of_eq = list_of_eq, legend = legend)
             else:
                 raise ValueError('Cannot find values')
         return col_label
@@ -280,7 +280,6 @@ class Graph():
             elif sorting is False and list_of_eq is not None:
                 slt = sorted(zip(col_label,col_val), key=lambda t:list_of_eq.index(t[0]))
                 col_label_loc, col_val_loc = zip(*slt)
-
 
             elif sorting is True:
                 l = sorted(zip(col_label, col_val), key=lambda x: x[1])
