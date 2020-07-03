@@ -42,7 +42,6 @@ class Graph():
 
         """
         filtered_eqs = []
-        i: int = 0
 
         if gas is not None:
             i = 2
@@ -89,7 +88,7 @@ class Graph():
             return (filtered_eqs, inital_eqs)
 
     @staticmethod
-    def find_col_values(df, list, Xcm_val, i: int = 2, filter_above=None, filter_below=None):
+    def find_col_values(df, list, Xcm_val, gas, filter_above=None, filter_below=None):
         """
         Find values based on input df and a list, such that a series of x and corresponding y values is filtered and generated.
 
@@ -106,6 +105,10 @@ class Graph():
         -------
 
         """
+        if gas is not None:
+            i = 2
+        else:
+            i = 3
         d_name = []
         d_val = []
 
@@ -127,7 +130,6 @@ class Graph():
             print("filtering below")
             data_df = data_df.loc[:, (data_df < filter_below).any()].copy(deep=True)
 
-
         # filter and take relevant values from dataframe and add to list. Extract all values as a list of lists
         for l in list:
             for s in data_df.columns.values:
@@ -145,7 +147,8 @@ class Graph():
 
         return d_val, d_name
 
-    def plot_bar(self, col_val, col_label, colour, gas_to_add=None, offset=0, sorting=False, list_of_eq = None, legend = None):
+    def plot_bar(self, col_val, col_label, colour, gas_to_add=None, offset=0, sorting=False, list_of_eq=None,
+                 legend=None):
         """
         Simple bar graph plot including setting ticks and correct axis locations.
         """
@@ -158,7 +161,7 @@ class Graph():
                 col_label_loc, col_val_loc = zip(*sorted(zip(col_label, col_val)))
 
             elif sorting is False and list_of_eq is not None:
-                slt = sorted(zip(col_label,col_val), key=lambda t:list_of_eq.index(t[0]))
+                slt = sorted(zip(col_label, col_val), key=lambda t: list_of_eq.index(t[0]))
                 col_label_loc, col_val_loc = zip(*slt)
 
             elif sorting is True:
@@ -169,12 +172,14 @@ class Graph():
             ind = np.arange(len(col_label_loc))
 
             if gas_to_add is None:
-                self.ax.barh(ind + (offset*bar_width), col_val_loc, bar_width,
-                             label='Sensitivity for laminar' + '\n' + '   burning velocity' if legend==None else legend, align='edge',
+                self.ax.barh(ind + (offset * bar_width), col_val_loc, bar_width,
+                             label='Sensitivity for laminar' + '\n' + '   burning velocity' if legend == None else legend,
+                             align='edge',
                              tick_label=col_label_loc, zorder=10, color=colour)
 
             else:
-                self.ax.barh(ind + (offset*bar_width), col_val_loc, bar_width, label='Sensitivity for ' + gas_to_add if legend==None else legend, align='edge',
+                self.ax.barh(ind + (offset * bar_width), col_val_loc, bar_width,
+                             label='Sensitivity for ' + gas_to_add if legend == None else legend, align='edge',
                              tick_label=col_label_loc, zorder=10, color=colour)
             # Move left y-axis and bottim x-axis to centre, passing through (0,0)
             self.ax.spines['left'].set_position('zero')
@@ -194,56 +199,19 @@ class Graph():
             self.ax.grid(b=True, which='minor', linestyle=':', linewidth='0.5', color='silver', zorder=0,
                          figure=self.fig)
 
-            self.ax.legend(bbox_to_anchor = (0.3,0.3))
+            self.ax.legend(bbox_to_anchor=(0.3, 0.3))
             return col_label_loc, col_val_loc
 
-    def make_plot(self, path_to_sheet_or_df, gas_to_add: str = None, list_of_eq: list = None, multiplier: float = 1,
-                         filter_above=None, filter_below=None, legend = None,
-                         colour: str = 'b', X: float = 0.02, offset: float = 0, sorting=False, i=2):
+    def plot_sensitivity(self, path_to_sheet_or_df, gas_to_add: str = None, list_of_eq: list = None, multiplier: float = 1,
+                         filter_above=None, filter_below=None, legend=None,
+                         colour: str = 'b', X: float = 0.02, offset: float = 0, sorting=False, do_not_plot=False):
 
-
-        # check input for filepath or dataframe:
-        if isinstance(path_to_sheet_or_df, pd.DataFrame):
-            sens_df = path_to_sheet_or_df
-
-        else:
-            sens_df = pd.read_csv(path_to_sheet_or_df)
-
-        # initalise x axis labels and x axis values:
-        list_col_h = []
-        col_val = []
-        col_label = []
-
-        (list_col_h, equation_list) = self.find_col_headers(sens_df, list_of_eq, gas_to_add)
-
-        # find 'gas + equation' (from equation list) in column headers and add to list_col_h the true column headers:
-        if list_col_h is not None:
-            col_val, col_label = self.find_col_values(sens_df, list_col_h, Xcm_val=X, i=i, filter_above=filter_above,
-                                                      filter_below=filter_below)
-
-            # if column does not exist in col label, assign value = 0 to it and add label:
-            if filter_below is None and filter_above is None:
-                for eq in equation_list:
-                    if eq not in col_label:
-                        col_label.append(eq)
-                        col_val.append(0)
-
-            col_val = [x * multiplier for x in col_val]
-            if col_val:
-                col_label, col_val = self.plot_bar(col_val, col_label, colour, gas_to_add = gas_to_add, offset=offset, sorting=sorting, list_of_eq = list_of_eq, legend = legend)
-            else:
-                raise ValueError('Cannot find values')
-
-        return col_label
-
-
-    def plot_bar_species(self, path_to_sheet_or_df, gas_to_add: str, list_of_eq: list = None, multiplier: float = 1,
-                         filter_above=None, filter_below=None, legend = None,
-                         colour: str = 'b', X: float = 0.02, offset: float = 0, sorting=False):
         """
-        This function takes REACTION SENSITIVITY values from a spreadsheet at default distance X = 0.02 and plots them.
-        The  user can modify this distance to better describe the point at which gases were samples,
-        (which is usually the end point of the combustor).
+        For REACTION SENSITIVITY plot: takes values from a spreadsheet at default distance X = 0.02 and plots them.
+        For LAMINAR BURNING VELOCITY plot: takes values at distance X (default 0). Assume using Flowrate_sens columns from a CHEMKIN spreadsheet.
+
+        The  user can modify this distance to better describe the point at which gases were samples, (which is usually the end point or inlet of the combustor).
+
         Parameters
         ----------
         path_to_sheet_or_df : path to file or df
@@ -261,35 +229,41 @@ class Graph():
         -------
 
         """
-        col_label = self.make_plot(path_to_sheet_or_df = path_to_sheet_or_df, gas_to_add=gas_to_add, list_of_eq = list_of_eq, multiplier = multiplier, filter_above=filter_above,
-                               filter_below=filter_below, legend = legend,
-                               colour = colour, X = X, offset= offset, sorting=sorting, i = 2)
-        return col_label
 
-    def plot_bar_lam_burning_v(self, path_to_sheet_or_df, list_of_eq=None, multiplier: float = 1, filter_above=None,
-                               filter_below=None, legend = None,
-                               colour: str = 'red', X: float = 0, offset: float = 0, sorting=False):
-        """
-        PLOT LAMINAR BURNING VELOCITY at distance X (default 0). Assume using Flowrate_sens columns frmo CHEMKIN spreadsheet.
-        Parameters
-        ----------
-        path_to_sheet_or_df : path to file
-        list_of_eq : if added, will only plot these chemical equations (otherwise will plot all equations available in spreadsheet).
-        multiplier : multiply all sensitivity values by this constant
-        filter_above : take all values above this one
-        filter_below : take all values below this one
-        colour : bar colour
-        X : X distance
-        offset : for bar graph spacing
-        sorting : if True, sorts the data in order for plotting
-        legend: custom legend added by user
-        Returns equations used in plot (in correct order)
-        -------
+        # check input for filepath or dataframe:
+        if isinstance(path_to_sheet_or_df, pd.DataFrame):
+            sens_df = path_to_sheet_or_df
 
-        """
-        col_label = self.make_plot(path_to_sheet_or_df = path_to_sheet_or_df, list_of_eq = list_of_eq, multiplier = multiplier, filter_above=filter_above,
-                               filter_below=filter_below, legend = legend,
-                               colour = colour, X = X, offset= offset, sorting=sorting, i = 3)
+        else:
+            sens_df = pd.read_csv(path_to_sheet_or_df)
+
+        # initalise x axis labels and x axis values:
+        list_col_h = []
+        col_val = []
+        col_label = []
+
+        (list_col_h, equation_list) = self.find_col_headers(sens_df, list_of_eq, gas_to_add)
+
+        # find 'gas + equation' (from equation list) in column headers and add to list_col_h the true column headers:
+        if list_col_h is not None:
+            col_val, col_label = self.find_col_values(sens_df, list_col_h, Xcm_val=X, gas = gas_to_add, filter_above=filter_above,
+                                                      filter_below=filter_below)
+
+            # if column does not exist in col label, assign value = 0 to it and add label:
+            if filter_below is None and filter_above is None:
+                for eq in equation_list:
+                    if eq not in col_label:
+                        col_label.append(eq)
+                        col_val.append(0)
+
+            col_val = [x * multiplier for x in col_val]
+            if col_val and do_not_plot is False:
+                col_label, col_val = self.plot_bar(col_val, col_label, colour, gas_to_add=gas_to_add, offset=offset,
+                                                   sorting=sorting, list_of_eq=list_of_eq, legend=legend)
+            elif do_not_plot is True:
+                print("DO NOT PLOT->TRUE : Returning an equation but not plotting it on a graph!")
+            else:
+                raise ValueError('Cannot find values')
 
         return col_label
 
