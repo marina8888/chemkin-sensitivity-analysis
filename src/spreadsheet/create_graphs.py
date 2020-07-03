@@ -146,7 +146,7 @@ class Graph():
         return d_val, d_name
 
     def plot_bar_species(self, path_to_sheet_or_df, gas_to_add: str, list_of_eq: list = None, multiplier: float = 1,
-                         filter_above=None, filter_below=None,
+                         filter_above=None, filter_below=None, legend = None,
                          colour: str = 'b', X: float = 0.02, offset: float = 0, sorting=False):
         """
         This function takes REACTION SENSITIVITY values from a spreadsheet at default distance X = 0.02 and plots them.
@@ -201,13 +201,13 @@ class Graph():
             col_val = [x * multiplier for x in col_val]
 
             if col_val:
-                self.plot_bar(col_val, col_label, colour, gas_to_add, offset=offset, sorting=sorting, list_of_eq = list_of_eq)
+                self.plot_bar(col_val, col_label, colour, gas_to_add, offset=offset, sorting=sorting, list_of_eq = list_of_eq, legend = legend)
             else:
                 raise ValueError('Cannot find values')
         return col_label
 
     def plot_bar_lam_burning_v(self, path_to_sheet_or_df, list_of_eq=None, multiplier: float = 1, filter_above=None,
-                               filter_below=None,
+                               filter_below=None, legend = None,
                                colour: str = 'red', X: float = 0, offset: float = 0, sorting=False):
         """
         PLOT LAMINAR BURNING VELOCITY at distance X (default 0). Assume using Flowrate_sens columns frmo CHEMKIN spreadsheet.
@@ -258,14 +258,14 @@ class Graph():
 
             col_val = [x * multiplier for x in col_val]
             if col_val:
-                col_label, col_val = self.plot_bar(col_val, col_label, colour, offset=offset, sorting=sorting, list_of_eq = list_of_eq)
+                col_label, col_val = self.plot_bar(col_val, col_label, colour, offset=offset, sorting=sorting, list_of_eq = list_of_eq, legend = legend)
             else:
                 raise ValueError('Cannot find values')
 
         return col_label
 
 
-    def plot_bar(self, col_val, col_label, colour, gas_to_add=None, offset=0, sorting=False, list_of_eq = None):
+    def plot_bar(self, col_val, col_label, colour, gas_to_add=None, offset=0, sorting=False, list_of_eq = None, legend = None):
         """
         Simple bar graph plot including setting ticks and correct axis locations.
         """
@@ -290,12 +290,12 @@ class Graph():
             ind = np.arange(len(col_label_loc))
 
             if gas_to_add is None:
-                self.ax.barh(ind + offset, col_val_loc, bar_width,
-                             label='Sensitivity for laminar' + '\n' + '   burning velocity', align='edge',
+                self.ax.barh(ind + (offset*bar_width), col_val_loc, bar_width,
+                             label='Sensitivity for laminar' + '\n' + '   burning velocity' if legend==None else legend, align='edge',
                              tick_label=col_label_loc, zorder=10, color=colour)
 
             else:
-                self.ax.barh(ind + offset, col_val_loc, bar_width, label='Sensitivity for ' + gas_to_add, align='edge',
+                self.ax.barh(ind + (offset*bar_width), col_val_loc, bar_width, label='Sensitivity for ' + gas_to_add if legend==None else legend, align='edge',
                              tick_label=col_label_loc, zorder=10, color=colour)
             # Move left y-axis and bottim x-axis to centre, passing through (0,0)
             self.ax.spines['left'].set_position('zero')
