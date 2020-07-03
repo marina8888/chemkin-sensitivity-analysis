@@ -145,126 +145,6 @@ class Graph():
 
         return d_val, d_name
 
-    def plot_bar_species(self, path_to_sheet_or_df, gas_to_add: str, list_of_eq: list = None, multiplier: float = 1,
-                         filter_above=None, filter_below=None, legend = None,
-                         colour: str = 'b', X: float = 0.02, offset: float = 0, sorting=False):
-        """
-        This function takes REACTION SENSITIVITY values from a spreadsheet at default distance X = 0.02 and plots them.
-        The  user can modify this distance to better describe the point at which gases were samples,
-        (which is usually the end point of the combustor).
-        Parameters
-        ----------
-        path_to_sheet_or_df : path to file or df
-        gas_to_add : select a gas of interest
-        list_of_eq : optional list of equations to plot (if not included, will find all equations in file)
-        multiplier : multiply all values by this constant
-        filter_above : plot only the data above this value
-        filter_below : plot only the data below this value
-        colour : colour of bars
-        X : X value from spreadsheet at which sensitivity should be measured
-        offset : offset for bars in order to create a grouped plot. This should increase in increments of bar width (currently at 0.15)
-        sorting : if True, sorts the data in order for plotting
-        legend: custom legend added by user
-        Returns None
-        -------
-
-        """
-
-
-
-        # check input for filepath or dataframe:
-        if isinstance(path_to_sheet_or_df, pd.DataFrame):
-            sens_df = path_to_sheet_or_df
-
-        else:
-            sens_df = pd.read_csv(path_to_sheet_or_df)
-
-        # initalise x axis labels and x axis values:
-        list_col_h = []
-        col_val = []
-        col_label = []
-
-        # find 'gas + equation' (from equation list) in column headers and add to list_col_h the true column headers:
-        (list_col_h, equation_list) = self.find_col_headers(sens_df, list_of_eq, gas_to_add)
-        print(sens_df['NO_Sens_H+O2<=>O+OH'])
-        if list_col_h is not None:
-            col_val, col_label = self.find_col_values(sens_df, list_col_h, i=2, Xcm_val=X, filter_above=filter_above,
-                                                      filter_below=filter_below)
-
-            # if column does not exist in col label, assign value = 0 to it and add label:
-            if filter_below is None and filter_above is None:
-                for eq in equation_list:
-                    if eq not in col_label:
-                        col_label.append(eq)
-                        col_val.append(0)
-
-            col_val = [x * multiplier for x in col_val]
-
-            if col_val:
-                col_label, col_val = self.plot_bar(col_val, col_label, colour, gas_to_add, offset=offset, sorting=sorting, list_of_eq = list_of_eq, legend = legend)
-            else:
-                raise ValueError('Cannot find values')
-        return col_label
-
-    def plot_bar_lam_burning_v(self, path_to_sheet_or_df, list_of_eq=None, multiplier: float = 1, filter_above=None,
-                               filter_below=None, legend = None,
-                               colour: str = 'red', X: float = 0, offset: float = 0, sorting=False):
-        """
-        PLOT LAMINAR BURNING VELOCITY at distance X (default 0). Assume using Flowrate_sens columns frmo CHEMKIN spreadsheet.
-        Parameters
-        ----------
-        path_to_sheet_or_df : path to file
-        list_of_eq : if added, will only plot these chemical equations (otherwise will plot all equations available in spreadsheet).
-        multiplier : multiply all sensitivity values by this constant
-        filter_above : take all values above this one
-        filter_below : take all values below this one
-        colour : bar colour
-        X : X distance
-        offset : for bar graph spacing
-        sorting : if True, sorts the data in order for plotting
-
-        Returns None
-        -------
-
-        """
-        # initialise the main dataframe:
-        sens_df = pd.DataFrame()
-
-        # check input for filepath or dataframe:
-        if isinstance(path_to_sheet_or_df, pd.DataFrame):
-            sens_df = path_to_sheet_or_df
-
-        else:
-            sens_df = pd.read_csv(path_to_sheet_or_df)
-
-        # initalise x axis labels and x axis values:
-        list_col_h = []
-        col_val = []
-        col_label = []
-
-        (list_col_h, equation_list) = self.find_col_headers(sens_df, list_of_eq)
-
-        # find 'gas + equation' (from equation list) in column headers and add to list_col_h the true column headers:
-        if list_col_h is not None:
-            col_val, col_label = self.find_col_values(sens_df, list_col_h, Xcm_val=X, i=3, filter_above=filter_above,
-                                                      filter_below=filter_below)
-
-            # if column does not exist in col label, assign value = 0 to it and add label:
-            if filter_below is None and filter_above is None:
-                for eq in equation_list:
-                    if eq not in col_label:
-                        col_label.append(eq)
-                        col_val.append(0)
-
-            col_val = [x * multiplier for x in col_val]
-            if col_val:
-                col_label, col_val = self.plot_bar(col_val, col_label, colour, offset=offset, sorting=sorting, list_of_eq = list_of_eq, legend = legend)
-            else:
-                raise ValueError('Cannot find values')
-
-        return col_label
-
-
     def plot_bar(self, col_val, col_label, colour, gas_to_add=None, offset=0, sorting=False, list_of_eq = None, legend = None):
         """
         Simple bar graph plot including setting ticks and correct axis locations.
@@ -316,6 +196,102 @@ class Graph():
 
             self.ax.legend(bbox_to_anchor = (0.3,0.3))
             return col_label_loc, col_val_loc
+
+    def make_plot(self, path_to_sheet_or_df, gas_to_add: str = None, list_of_eq: list = None, multiplier: float = 1,
+                         filter_above=None, filter_below=None, legend = None,
+                         colour: str = 'b', X: float = 0.02, offset: float = 0, sorting=False, i=2):
+
+
+        # check input for filepath or dataframe:
+        if isinstance(path_to_sheet_or_df, pd.DataFrame):
+            sens_df = path_to_sheet_or_df
+
+        else:
+            sens_df = pd.read_csv(path_to_sheet_or_df)
+
+        # initalise x axis labels and x axis values:
+        list_col_h = []
+        col_val = []
+        col_label = []
+
+        (list_col_h, equation_list) = self.find_col_headers(sens_df, list_of_eq, gas_to_add)
+
+        # find 'gas + equation' (from equation list) in column headers and add to list_col_h the true column headers:
+        if list_col_h is not None:
+            col_val, col_label = self.find_col_values(sens_df, list_col_h, Xcm_val=X, i=i, filter_above=filter_above,
+                                                      filter_below=filter_below)
+
+            # if column does not exist in col label, assign value = 0 to it and add label:
+            if filter_below is None and filter_above is None:
+                for eq in equation_list:
+                    if eq not in col_label:
+                        col_label.append(eq)
+                        col_val.append(0)
+
+            col_val = [x * multiplier for x in col_val]
+            if col_val:
+                col_label, col_val = self.plot_bar(col_val, col_label, colour, gas_to_add = gas_to_add, offset=offset, sorting=sorting, list_of_eq = list_of_eq, legend = legend)
+            else:
+                raise ValueError('Cannot find values')
+
+        return col_label
+
+
+    def plot_bar_species(self, path_to_sheet_or_df, gas_to_add: str, list_of_eq: list = None, multiplier: float = 1,
+                         filter_above=None, filter_below=None, legend = None,
+                         colour: str = 'b', X: float = 0.02, offset: float = 0, sorting=False):
+        """
+        This function takes REACTION SENSITIVITY values from a spreadsheet at default distance X = 0.02 and plots them.
+        The  user can modify this distance to better describe the point at which gases were samples,
+        (which is usually the end point of the combustor).
+        Parameters
+        ----------
+        path_to_sheet_or_df : path to file or df
+        gas_to_add : select a gas of interest
+        list_of_eq : optional list of equations to plot (if not included, will find all equations in file)
+        multiplier : multiply all values by this constant
+        filter_above : plot only the data above this value
+        filter_below : plot only the data below this value
+        colour : colour of bars
+        X : X value from spreadsheet at which sensitivity should be measured
+        offset : offset for bars in order to create a grouped plot. This should increase in increments of bar width (currently at 0.15)
+        sorting : if True, sorts the data in order for plotting
+        legend: custom legend added by user
+        Returns equations used in plot (in correct order)
+        -------
+
+        """
+        col_label = self.make_plot(path_to_sheet_or_df = path_to_sheet_or_df, gas_to_add=gas_to_add, list_of_eq = list_of_eq, multiplier = multiplier, filter_above=filter_above,
+                               filter_below=filter_below, legend = legend,
+                               colour = colour, X = X, offset= offset, sorting=sorting, i = 2)
+        return col_label
+
+    def plot_bar_lam_burning_v(self, path_to_sheet_or_df, list_of_eq=None, multiplier: float = 1, filter_above=None,
+                               filter_below=None, legend = None,
+                               colour: str = 'red', X: float = 0, offset: float = 0, sorting=False):
+        """
+        PLOT LAMINAR BURNING VELOCITY at distance X (default 0). Assume using Flowrate_sens columns frmo CHEMKIN spreadsheet.
+        Parameters
+        ----------
+        path_to_sheet_or_df : path to file
+        list_of_eq : if added, will only plot these chemical equations (otherwise will plot all equations available in spreadsheet).
+        multiplier : multiply all sensitivity values by this constant
+        filter_above : take all values above this one
+        filter_below : take all values below this one
+        colour : bar colour
+        X : X distance
+        offset : for bar graph spacing
+        sorting : if True, sorts the data in order for plotting
+        legend: custom legend added by user
+        Returns equations used in plot (in correct order)
+        -------
+
+        """
+        col_label = self.make_plot(path_to_sheet_or_df = path_to_sheet_or_df, list_of_eq = list_of_eq, multiplier = multiplier, filter_above=filter_above,
+                               filter_below=filter_below, legend = legend,
+                               colour = colour, X = X, offset= offset, sorting=sorting, i = 3)
+
+        return col_label
 
     def show_and_save(self, path_of_save_folder: str, name: str):
         """
