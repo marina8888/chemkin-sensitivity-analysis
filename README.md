@@ -2,6 +2,11 @@
 
 [![Codacy Badge](https://api.codacy.com/project/badge/Grade/b9cf8113c39c4c37a3100fee24257713)](https://app.codacy.com/manual/marina8888/chemkin-sensitivity-analysis?utm_source=github.com&utm_medium=referral&utm_content=marina8888/chemkin-sensitivity-analysis&utm_campaign=Badge_Grade_Dashboard)
 
+## Example graph (generated from sample code above)
+
+![Sample code graph](website_images/test.png)
+
+
 ## To Install Directory on macOS (New Users)
 1.Go to [macOS installation file](https://github.com/marina8888/chemkin-sensitivity-analysis/blob/master/install_files/macos_install.sh), click on the Raw button and right click Save As to save the installation script. Please save it in the directory where you want this project to be saved (e.g the Developer folder)
 
@@ -50,29 +55,36 @@ Uses matplotlib library to plot sensitivity data as bar charts. Sensitivity data
 ### Sample code
 To generate graphs your chemkin spreadsheets should be uploaded to a new folder in the src folder. To plot, a graph object must be created in src/main.py, where graph_object.plot_bar_ functions can be used to plot the sensitivities as follows:
 ```
-from spreadsheet import create_graphs
+from spreadsheet import create_graphs, prepare_sheet
+
+# SAMPLE SCRIPT BELOW:
 
 def main():
-    df = prepare_sheet.add_distance('data/okafor_stag_sens/okafor_stag_0.85_0.4.csv', 0.02)
-    df_lam = prepare_sheet.add_distance('data/okafor_lam_sens/okafor_lam_0.85_0.4.csv', 0.02)
 
+    # prepare a new dataframes from prepare_sheet functions:
+
+    df2 = prepare_sheet.join_files('data/40%_0.85')
+    df2 = prepare_sheet.remove_spaces(df2)
+
+    # Create a new graph:
     graph = create_graphs.Graph('40% Heat Ratio, 0.85 Equivalence Ratio')
 
+    # Find list of equations (eq) within the filter boundaries for species sensitivity NO, by using 'do_not_plot':
+    eq = graph.plot_sensitivity(df2, 'NO', X = 2.0, filter_below=-0.03, filter_above=0.03, sorting=True, do_not_plot=True)
 
-    NO_equations = graph.plot_bar_species(df, 'NO', X = 0.02, colour = 'g', filter_above=0.03, filter_below=-0.03, offset = 0.15, sorting = True)
+    # Add laminar burning velocity plot spreadsheet, using previously extracted equations, and sort them in order (ALWAYS SORT FIRST PLOT and return sorted equations):
+    eq = graph.plot_sensitivity('data/okafor_laminar/40%_0.85.csv', list_of_eq=eq, offset=1, X=0, colour ='r', multiplier=1.5, legend ='Laminar burning velocity x 1.5', sorting = True)
 
-    graph.plot_bar_species(df, 'NH3', list_of_eq = NO_equations, X = 0.02, multiplier=0.5)
-    graph.plot_bar_lam_burning_v(df_lam, list_of_eq = NO_equations, X = 0,  offset = -0.15)
+    # Plot 'NO' species for the same list of equations:
+    graph.plot_sensitivity(df2, 'NO', list_of_eq=eq, X=2.0, colour ='blue')
 
-    graph.show_and_save('./output/graphs', 'me')
+    # Save graphs to ./output/graphs folder (which user may need to create) under the name test.png:
+    graph.show_and_save('./output/graphs', 'test.png')
 
 if __name__ == "__main__":
     main()
+
 ```
-
-### Example graph (generated from sample code above)
-
-![Sample code graph](website_images/test.png)
 
 ### Basic Usage
 
@@ -100,54 +112,34 @@ class Graph():
 
 __Then to create a new bar plot (or multiple plots on one graph), call one of the following two functions on your newly created graph object:__
 
-SPECIES PLOT: 
+ADD ONE SINGLE SET OF BARS TO GRAPH: 
+For species sensitity plots, include a `gas_to_add` argument, otherwise function will search for laminar burning velocity values: 
 ```buildoutcfg
-    def plot_bar_species(self, name_of_folder_n_sheet: str, gas_to_add: str, list_of_eq: list = None, multiplier: float = 1, filter_above = None, filter_below= None,
-                         colour: str = 'b', X: float = 0.02, offset: float = 0):
+    def plot_sensitivity(self, path_to_sheet_or_df, gas_to_add: str = None, list_of_eq: list = None, multiplier: float = 1,
+                         filter_above=None, filter_below=None, legend=None,
+                         colour: str = 'b', X: float = 0.02, offset: float = 0, sorting=False, do_not_plot=False):
         """
-        This function takes REACTION SENSITIVITY values from a spreadsheet at default distance X = 0.02 and plots them.
-        The  user can modify this distance to better describe the point at which gases were samples,
-        (which is usually the end point of the combustor).
+        For REACTION SENSITIVITY plot: takes values from a spreadsheet at default distance X = 0.02 and plots them.
+        For LAMINAR BURNING VELOCITY plot: takes values at distance X (default 0). Assume using Flowrate_sens columns from a CHEMKIN spreadsheet.
+
+        The  user can modify this distance to better describe the point at which gases were samples, (which is usually the end point or inlet of the combustor).
+
         Parameters
         ----------
-        name_of_folder_n_sheet : path to file
+        path_to_sheet_or_df : path to file or df
         gas_to_add : select a gas of interest
         list_of_eq : optional list of equations to plot (if not included, will find all equations in file)
         multiplier : multiply all values by this constant
         filter_above : plot only the data above this value
-        filter_below : plot only the data below this value 
+        filter_below : plot only the data below this value
         colour : colour of bars
-        X : X value frmo spreadsheet at which sensitivity should be measured
+        X : X value from spreadsheet at which sensitivity should be measured
         offset : offset for bars in order to create a grouped plot. This should increase in increments of bar width (currently at 0.15)
-
-        Returns None
+        sorting : if True, sorts the data in order for plotting
+        legend: custom legend added by user
+        Returns equations used in plot (in correct order)
         -------
-
-        """
-```
-
-LAMINAR PLOT: 
-
-```
-def plot_bar_lam_burning_v(self, name_of_folder_n_sheet: str, list_of_eq=None, multiplier: float = 1, filter_above = None, filter_below= None,
-                               colour: str = 'red', X: float = 0, offset: float = 0):
-        """
-        PLOT LAMINAR BURNING VELOCITY at distance X (default 0). Assume using Flowrate_sens columns frmo CHEMKIN spreadsheet.
-        Parameters
-        ----------
-        name_of_folder_n_sheet : path to file
-        list_of_eq : if added, will only plot these chemical equations (otherwise will plot all equations available in spreadsheet).
-        multiplier : multiply all sensitivity values by this constant
-        filter_above : take all values above this one
-        filter_below : take all values below this one
-        colour : bar colour
-        X : X distance
-        offset : for bar graph spacing
-
-        Returns None
-        -------
-
-        """
+    """
 ```
 __Save all values__:
 
