@@ -73,7 +73,7 @@ def main():
     eq = graph.plot_sensitivity(df2, 'NO', X = 2.0, filter_below=-0.03, filter_above=0.03, sorting=True, do_not_plot=True)
 
     # Add laminar burning velocity plot spreadsheet, using previously extracted equations, and sort them in order (ALWAYS SORT FIRST PLOT and return sorted equations):
-    eq = graph.plot_sensitivity('data/okafor_laminar/40%_0.85.csv', list_of_eq=eq, offset=1, X=0, colour ='r', multiplier=1.5, legend ='Laminar burning velocity x 1.5', sorting = True)
+    eq = graph.plot_sensitivity('data/40%_0.85.csv', list_of_eq=eq, offset=1, X=0, colour ='r', multiplier=1.5, legend ='Laminar burning velocity x 1.5', sorting = True)
 
     # Plot 'NO' species for the same list of equations:
     graph.plot_sensitivity(df2, 'NO', list_of_eq=eq, X=2.0, colour ='blue')
