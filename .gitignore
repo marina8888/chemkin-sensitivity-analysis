@@ -141,4 +141,6 @@ src/.DS_Store
 !src/output/graphs
 !src/data/40%_0.85
 !src/data/okafor_laminar/40%_0.85.csv
+website_images/*
+.idea/*
 
