@@ -51,6 +51,11 @@ Setup your platform for development in Python3 and clone repo from the [GitHub r
 ## Creating Sensitivity Graphs
 all code in __src/spreadsheet/create_graphs.py file__ and __src/spreadsheet/prepare_sheet.py file__.
 Uses matplotlib library to plot sensitivity data as bar charts. Sensitivity data must be saved in .csv file using the format CHEMKIN postprocessing tool uses to save data to spreadsheet.
+Preferred method of extracting files from CHEMKIN is with the export utility option:
+ ![Export Utility](/Users/marina/Developer/GitHub/chemkin-sensitivity-analysis/website_images/chemkinexport.png)
+
+Once the files have been extracted with export utility, they can be joined using `df = prepare_sheet.join_files('path/to/folder')`
+and then the spaces can be removed using `prepare_sheet.remove_spaces(df)`.
 
 ### Sample code for the sample graph:
 To generate graphs your chemkin spreadsheets should be uploaded to a new folder in the src folder. To plot, a graph object must be created in src/main.py, where graph_object.plot_sensitivity functions can be used to plot the sensitivities as follows:
