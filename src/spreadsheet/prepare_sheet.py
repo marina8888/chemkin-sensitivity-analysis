@@ -55,7 +55,7 @@ def join_files(path_to_folder):
     sens_df = pd.read_csv(list[0])
     for i in range(1,len(list),1):
         temp = pd.read_csv(list[i])
-        sens_df = sens_df.merge(temp)
+        sens_df = sens_df.merge(temp, how='left')
 
     # returns a dataframe of all sheets joined together, which can be used as input for plotting functions:
     return sens_df
